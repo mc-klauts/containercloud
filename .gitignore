@@ -49,3 +49,7 @@ bin/
 /shortcloud-api/src/main/java/de/dasshorty/shortcloud/api/service/ServiceConfiguration.java
 /shortcloud-api/src/main/java/de/dasshorty/shortcloud/api/Volume.java
 /.idea/.gitignore
+/.idea/vcs.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/git_toolbox_prj.xml
+/.idea/.name

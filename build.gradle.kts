@@ -2,7 +2,7 @@ plugins {
     id("java")
 }
 
-group = "de.dasshorty"
+group = "de.containercloud"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -14,9 +14,9 @@ dependencies {
     // docker api's
     implementation("com.github.docker-java:docker-java-core:3.3.3")
     implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.3")
+    implementation(project(":containercloud-api"))
 
     // project code
-    implementation(project(":shortcloud-api"))
 
     // Logger
     implementation("org.slf4j:slf4j-simple:2.0.9")

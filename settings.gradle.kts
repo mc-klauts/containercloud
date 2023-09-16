@@ -1,3 +1,2 @@
-rootProject.name = "shortcloud"
-include("shortcloud-api")
-include("shortcloud-wrapper")
+rootProject.name = "containercloud"
+include("containercloud-api")
