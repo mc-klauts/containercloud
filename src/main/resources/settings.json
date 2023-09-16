@@ -1,0 +1,16 @@
+{
+  "database": {
+    "host": "127.0.0.1",
+    "port": "27017",
+    "database": "shortcore",
+    "user": "shortcore",
+    "password": "changeme",
+    "enableSrv": false,
+    "collections": {
+      "services": "services",
+      "tasks": "tasks",
+      "volumes": "volumes",
+      "cloud-data": "cloud-data"
+    }
+  }
+}
