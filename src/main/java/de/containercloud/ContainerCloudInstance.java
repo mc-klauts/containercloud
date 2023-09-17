@@ -6,10 +6,13 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient.Request;
 import com.github.dockerjava.transport.DockerHttpClient.Response;
+import de.containercloud.config.ConfigHandler;
 import de.containercloud.json.JsonBodyHandler;
+import de.containercloud.wrapper.CloudWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.Duration;
 
 public class ContainerCloudInstance {
@@ -25,6 +28,22 @@ public class ContainerCloudInstance {
         initDockerClientConfig();
         initHttpClient();
         checkDockerConnection();
+
+        new ConfigHandler(this.logger);
+
+        addShutDownHookForHttpClient();
+
+        new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger);
+    }
+
+    private void addShutDownHookForHttpClient() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                this.httpClient.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
     private void initDockerClientConfig() {
@@ -36,7 +55,6 @@ public class ContainerCloudInstance {
     }
 
     private void checkDockerConnection() {
-
 
         Request request = Request.builder()
                 .method(Request.Method.GET)
@@ -56,7 +74,6 @@ public class ContainerCloudInstance {
     }
 
     private void initHttpClient() {
-
 
         this.httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(this.dockerClientConfig.getDockerHost())
