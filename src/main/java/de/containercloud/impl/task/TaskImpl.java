@@ -1,23 +1,27 @@
 package de.containercloud.impl.task;
 
 import de.containercloud.api.ServiceType;
-import de.containercloud.api.service.Service;
 import de.containercloud.api.service.configuration.ServiceConfiguration;
 import de.containercloud.api.task.Task;
 import de.containercloud.api.template.Template;
+import de.containercloud.database.MongoProvider;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class TaskImpl implements Task {
 
     private final ServiceType type;
+    private final UUID uid;
+    private final List<UUID> runningServices;
+    private String template;
 
-    public TaskImpl(ServiceType type) {
-        this.type = type;
+    @Override
+    public UUID uid() {
+        return this.uid;
     }
-
-
 
     @Override
     public ServiceType type() {
@@ -25,8 +29,8 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public List<Service> runningServices() {
-        return null;
+    public List<UUID> runningServices() {
+        return this.runningServices;
     }
 
     @Override
@@ -41,11 +45,12 @@ public class TaskImpl implements Task {
 
     @Override
     public Template template() {
-        return null;
+        return MongoProvider.getINSTANCE().getTemplateHandler().template(this.template);
     }
 
     @Override
     public boolean template(Template template) {
+        this.template = template().name();
         return false;
     }
 }
