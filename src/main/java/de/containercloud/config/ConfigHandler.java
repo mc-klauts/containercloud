@@ -14,7 +14,7 @@ public class ConfigHandler {
     public ConfigHandler(Logger logger) {
 
         val dir = new File("/cloud");
-        val file = new File(dir, "settings.yml");
+        val file = new File(dir, "settings.json");
 
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
