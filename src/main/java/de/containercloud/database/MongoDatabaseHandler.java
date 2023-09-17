@@ -1,12 +1,10 @@
 package de.containercloud.database;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
+import com.mongodb.client.*;
 import de.containercloud.config.ConfigHandler;
 import lombok.val;
+import org.bson.Document;
 
 public class MongoDatabaseHandler {
 
@@ -20,6 +18,10 @@ public class MongoDatabaseHandler {
         setupCollections(configHandler);
 
         Runtime.getRuntime().addShutdownHook(new Thread(client::close));
+    }
+
+    public MongoCollection<Document> collection(CloudMongoCollection collection) {
+        return this.database.getCollection(collection.collectionName());
     }
 
     private void setupCollections(ConfigHandler configHandler) {
