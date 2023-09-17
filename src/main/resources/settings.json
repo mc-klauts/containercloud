@@ -10,6 +10,7 @@
       "services": "services",
       "tasks": "tasks",
       "volumes": "volumes",
+      "template": "templates",
       "cloud-data": "cloud-data"
     }
   }
