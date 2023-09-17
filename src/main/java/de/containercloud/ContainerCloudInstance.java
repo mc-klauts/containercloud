@@ -23,7 +23,7 @@ public class ContainerCloudInstance {
 
     public ContainerCloudInstance() {
 
-        this.logger = LoggerFactory.getLogger("ShortCloud");
+        this.logger = LoggerFactory.getLogger("ContainerCloud");
 
         initDockerClientConfig();
         initHttpClient();
