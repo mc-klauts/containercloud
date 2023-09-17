@@ -1,9 +1,13 @@
 package de.containercloud.api;
 
-public enum ServiceType {
+public enum ServiceType{
 
     NORMAL,
     DYNAMIC,
-    PROXY
+    PROXY;
+
+    public String toString() {
+        return this.name();
+    }
 
 }
