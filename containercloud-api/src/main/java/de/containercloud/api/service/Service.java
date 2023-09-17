@@ -17,6 +17,8 @@ public interface Service {
 
     UUID serviceId();
 
+    String serviceName();
+
     ServiceConfiguration configuration();
 
 }
