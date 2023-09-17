@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("com.github.johnrengelman.shadow") version("8.1.1")
 }
 
 group = "de.containercloud"
@@ -7,6 +8,13 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType(Jar::class) {
+    manifest {
+        attributes["Manifest-Version"] = "1.0"
+        attributes["Main-Class"] = "de.containercloud.ContainerCloud"
+    }
 }
 
 dependencies {
