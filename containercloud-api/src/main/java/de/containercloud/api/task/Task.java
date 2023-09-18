@@ -1,6 +1,7 @@
 package de.containercloud.api.task;
 
 import de.containercloud.api.ServiceType;
+import de.containercloud.api.service.Service;
 import de.containercloud.api.service.configuration.ServiceConfiguration;
 import de.containercloud.api.template.Template;
 
@@ -13,9 +14,13 @@ public interface Task {
 
     List<UUID> runningServices();
 
-    boolean createService(ServiceConfiguration configuration);
+    Service createService();
 
     boolean removeService(UUID uuid);
+
+    TaskVolume volume();
+
+    ServiceConfiguration configuration();
 
     /**
      * @return template from the current task or null if the template can't be found in the database

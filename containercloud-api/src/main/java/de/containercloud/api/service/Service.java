@@ -1,6 +1,7 @@
 package de.containercloud.api.service;
 
 import de.containercloud.api.service.configuration.ServiceConfiguration;
+import de.containercloud.api.task.Task;
 
 import java.util.UUID;
 
@@ -15,10 +16,10 @@ public interface Service {
 
     boolean remove();
 
+    Task task();
+
     UUID serviceId();
 
     String serviceName();
-
-    ServiceConfiguration configuration();
 
 }

@@ -1,10 +1,14 @@
 package de.containercloud.impl.task;
 
+import com.google.gson.Gson;
 import de.containercloud.api.ServiceType;
+import de.containercloud.api.service.Service;
 import de.containercloud.api.service.configuration.ServiceConfiguration;
 import de.containercloud.api.task.Task;
+import de.containercloud.api.task.TaskVolume;
 import de.containercloud.api.template.Template;
 import de.containercloud.database.MongoProvider;
+import de.containercloud.impl.service.ServiceConfigurationImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -16,6 +20,8 @@ public class TaskImpl implements Task {
     private final ServiceType type;
     private final UUID uid;
     private final List<UUID> runningServices;
+    private final TaskVolume taskVolume;
+    private final ServiceConfigurationImpl serviceConfiguration;
     private String template;
 
     @Override
@@ -34,13 +40,23 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public boolean createService(ServiceConfiguration configuration) {
-        return false;
+    public Service createService() {
+        return null;
     }
 
     @Override
     public boolean removeService(UUID uuid) {
         return false;
+    }
+
+    @Override
+    public TaskVolume volume() {
+        return this.taskVolume;
+    }
+
+    @Override
+    public ServiceConfiguration configuration() {
+        return this.serviceConfiguration;
     }
 
     @Override
@@ -51,6 +67,11 @@ public class TaskImpl implements Task {
     @Override
     public boolean template(Template template) {
         this.template = template().name();
-        return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
