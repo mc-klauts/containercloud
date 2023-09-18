@@ -9,7 +9,6 @@ import de.containercloud.database.CloudMongoCollection;
 import de.containercloud.database.Handler;
 import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.impl.service.ServiceImpl;
-import de.containercloud.impl.task.TaskImpl;
 import lombok.val;
 import org.bson.Document;
 
