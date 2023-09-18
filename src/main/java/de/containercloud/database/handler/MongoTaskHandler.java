@@ -13,7 +13,6 @@ import lombok.val;
 import org.bson.Document;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MongoTaskHandler extends Handler {
 
@@ -25,10 +24,10 @@ public class MongoTaskHandler extends Handler {
         this.configHandler = configHandler;
     }
 
-    public TaskImpl task(UUID uid) {
+    public TaskImpl task(String taskId) {
         val collection = this.collection();
 
-        val document = collection.find(Filters.eq("uid", uid.toString())).first();
+        val document = collection.find(Filters.eq("taskId", taskId)).first();
 
         return document == null ? null : new Gson().fromJson(document.toJson(), TaskImpl.class);
     }
@@ -37,30 +36,30 @@ public class MongoTaskHandler extends Handler {
         return this.databaseHandler.collection(this.configHandler.getCollection(CollectionTypes.TASK));
     }
 
-    public boolean existTask(UUID uid) {
+    public boolean existTask(String taskId) {
         val collection = this.collection();
-        val document = collection.find(Filters.eq("uid", uid.toString())).first();
+        val document = collection.find(Filters.eq("taskId", taskId)).first();
         return document != null;
     }
 
     public boolean createTask(TaskImpl task) {
         val collection = this.collection();
 
-        if (this.existTask(task.uid()))
+        if (this.existTask(task.taskId()))
             return false;
 
         collection.insertOne(this.getGson().fromJson(this.getGson().toJson(task), Document.class));
         return true;
     }
 
-    public boolean deleteTask(UUID uid) {
+    public boolean deleteTask(String taskId) {
 
         val collection = this.collection();
 
-        if (!this.existTask(uid))
+        if (!this.existTask(taskId))
             return false;
 
-        this.collection().deleteOne(Filters.eq("uid", uid.toString()));
+        this.collection().deleteOne(Filters.eq("taskId", taskId));
 
         return true;
     }
@@ -69,10 +68,10 @@ public class MongoTaskHandler extends Handler {
 
         val collection = this.collection();
 
-        if (!this.existTask(task.uid()))
+        if (!this.existTask(task.taskId()))
             return false;
 
-        this.collection().updateOne(Filters.eq("uid", task.uid()), List.of(
+        this.collection().updateOne(Filters.eq("taskId", task.taskId()), List.of(
                 Updates.set("type", task.type().toString()),
                 Updates.set("runningServices", task.runningServices()),
                 Updates.set("template", task.template().toString())

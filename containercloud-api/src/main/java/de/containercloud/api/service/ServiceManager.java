@@ -8,6 +8,10 @@ public interface ServiceManager {
 
     Service withName(@NonNull String serviceName);
 
-    Service withId(UUID uid);
+    Service withId(String serviceId);
+
+    Service createService();
+
+    boolean removeService(String serviceId);
 
 }

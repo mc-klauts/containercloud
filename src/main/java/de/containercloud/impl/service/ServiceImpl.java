@@ -1,45 +1,45 @@
 package de.containercloud.impl.service;
 
 import de.containercloud.api.service.Service;
-import de.containercloud.api.service.configuration.ServiceConfiguration;
+import de.containercloud.api.task.Task;
+import de.containercloud.database.MongoProvider;
+import de.containercloud.wrapper.CloudWrapper;
 import lombok.RequiredArgsConstructor;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class ServiceImpl implements Service {
 
-    private final UUID uid;
+    private final String serviceId;
+    private final String taskId;
     private final String serviceName;
-    private final ServiceConfigurationImpl serviceConfiguration;
 
     @Override
     public boolean start() {
-        return false;
+        return CloudWrapper.getINSTANCE().getContainerWrapper().startService(this.serviceId);
     }
 
     @Override
     public boolean stop() {
-        return false;
+        return CloudWrapper.getINSTANCE().getContainerWrapper().stopService(this.serviceId);
     }
 
     @Override
     public boolean remove() {
-        return false;
+        return CloudWrapper.getINSTANCE().getContainerWrapper().removeService(this.serviceId);
     }
 
     @Override
-    public UUID serviceId() {
-        return this.uid;
+    public Task task() {
+        return MongoProvider.getINSTANCE().getTaskHandler().task(taskId);
+    }
+
+    @Override
+    public String serviceId() {
+        return this.serviceId;
     }
 
     @Override
     public String serviceName() {
         return this.serviceName;
-    }
-
-    @Override
-    public ServiceConfiguration configuration() {
-        return this.serviceConfiguration;
     }
 }

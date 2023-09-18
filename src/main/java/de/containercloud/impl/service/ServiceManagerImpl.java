@@ -14,7 +14,17 @@ public class ServiceManagerImpl implements ServiceManager {
     }
 
     @Override
-    public Service withId(UUID uid) {
-        return MongoProvider.getINSTANCE().getServiceHandler().service(uid);
+    public Service withId(String serviceId) {
+        return MongoProvider.getINSTANCE().getServiceHandler().serviceById(serviceId);
+    }
+
+    @Override
+    public Service createService() {
+        return null;
+    }
+
+    @Override
+    public boolean removeService(String serviceId) {
+        return false;
     }
 }

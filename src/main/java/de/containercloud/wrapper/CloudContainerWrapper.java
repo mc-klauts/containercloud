@@ -1,6 +1,9 @@
 package de.containercloud.wrapper;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import de.containercloud.api.service.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -15,11 +18,15 @@ public class CloudContainerWrapper {
     private final Map<String, Service> runningContainers = new HashMap<>();
 
     public void runService(Service service) {
-        val response = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
+        val createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
                 .withName("cloud-" + service.serviceName())
                 .withEnv("TYPE=" + service.task().configuration().version().platform().getPlatformId(),
-                        "EULA=true")
-                .withVolumes()
+                        "EULA=true");
+
+        createContainer
+                .getHostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPortRange(50000, 60000), ExposedPort.tcp(25565)));
+
+        val response = createContainer.withVolumes()
                 .exec();
 
         val id = response.getId();

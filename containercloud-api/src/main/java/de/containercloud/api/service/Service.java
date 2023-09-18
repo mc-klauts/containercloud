@@ -1,9 +1,6 @@
 package de.containercloud.api.service;
 
-import de.containercloud.api.service.configuration.ServiceConfiguration;
 import de.containercloud.api.task.Task;
-
-import java.util.UUID;
 
 /*
  * Represents a dockerized minecraft server
@@ -18,7 +15,7 @@ public interface Service {
 
     Task task();
 
-    UUID serviceId();
+    String serviceId();
 
     String serviceName();
 

@@ -12,24 +12,18 @@ public interface Task {
 
     ServiceType type();
 
-    List<UUID> runningServices();
-
-    Service createService();
-
-    boolean removeService(UUID uuid);
-
-    TaskVolume volume();
+    List<String> runningServices();
 
     ServiceConfiguration configuration();
 
     /**
      * @return template from the current task or null if the template can't be found in the database
-     * */
+     */
     Template template();
 
     boolean template(Template template);
 
-    UUID uid();
+    String taskId();
 
 
 }
