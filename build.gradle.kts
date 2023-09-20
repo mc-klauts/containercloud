@@ -34,6 +34,7 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
+    implementation("io.javalin:javalin:5.6.1")
 
     // mongo
     implementation("org.mongodb:mongodb-driver-sync:4.10.2")

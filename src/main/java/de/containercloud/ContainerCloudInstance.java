@@ -24,16 +24,28 @@ public class ContainerCloudInstance {
     public ContainerCloudInstance() {
 
         this.logger = LoggerFactory.getLogger("ContainerCloud");
-
         initDockerClientConfig();
         initHttpClient();
         checkDockerConnection();
-
+        healthCheck();
         new ConfigHandler(this.logger);
+        CloudWrapper wrapper = new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger);
 
         addShutDownHookForHttpClient();
+    }
 
-        new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger);
+    private void healthCheck() {
+        Request request = Request.builder()
+                .method(Request.Method.GET)
+                .path("/_ping")
+                .build();
+        try (Response response = this.httpClient.execute(request)) {
+
+            this.logger.info("--- HEALTH CHECK ---");
+            this.logger.info("Status: " + response.getStatusCode());
+            this.logger.info("Message: " + JsonBodyHandler.toJson(response.getBody()));
+            this.logger.info("--- HEALTH CHECK ---");
+        }
     }
 
     private void addShutDownHookForHttpClient() {

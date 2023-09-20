@@ -8,7 +8,9 @@ import de.containercloud.api.service.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -16,6 +18,10 @@ public class CloudContainerWrapper {
 
     private final DockerClient dockerClient;
     private final Map<String, Service> runningContainers = new HashMap<>();
+
+    public List<String> listRunningContainers() {
+        return new ArrayList<>(runningContainers.keySet());
+    }
 
     public void runService(Service service) {
         val createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")

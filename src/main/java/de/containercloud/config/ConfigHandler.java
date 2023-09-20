@@ -1,11 +1,15 @@
 package de.containercloud.config;
 
+import de.containercloud.ContainerCloud;
 import de.containercloud.database.CloudMongoCollection;
 import lombok.val;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
 public class ConfigHandler {
 
@@ -13,7 +17,7 @@ public class ConfigHandler {
 
     public ConfigHandler(Logger logger) {
 
-        val dir = new File("/cloud");
+        val dir = new File("/home/cloud");
         val file = new File(dir, "settings.json");
 
         if (!dir.exists()) {
@@ -23,9 +27,8 @@ public class ConfigHandler {
             }
 
             try {
-                if (!file.createNewFile()) {
-                    logger.error("Cloud can't create files! [ConfigHandler:file]");
-                    throw new RuntimeException("Cloud can't create folders! [ConfigHandler:e:file]");
+                if (!file.exists()) {
+                    FileUtils.copyURLToFile(new URL("https://data.theccloud.de/settings.json"), file);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
