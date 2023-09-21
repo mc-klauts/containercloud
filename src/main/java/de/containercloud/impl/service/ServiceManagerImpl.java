@@ -1,6 +1,7 @@
 package de.containercloud.impl.service;
 
 import de.containercloud.api.service.Service;
+import de.containercloud.api.service.ServiceBuilder;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoProvider;
 import lombok.NonNull;
@@ -19,8 +20,10 @@ public class ServiceManagerImpl implements ServiceManager {
     }
 
     @Override
-    public Service createService() {
-        return null;
+    public Service createService(ServiceBuilder builder) {
+
+
+
     }
 
     @Override

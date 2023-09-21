@@ -3,14 +3,18 @@ package de.containercloud.database;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import de.containercloud.config.ConfigHandler;
+import lombok.Getter;
 import lombok.val;
 import org.bson.Document;
 
 public class MongoDatabaseHandler {
 
     private final MongoDatabase database;
+    @Getter
+    private final ConfigHandler configHandler;
 
     public MongoDatabaseHandler(ConfigHandler configHandler) {
+        this.configHandler = configHandler;
 
         MongoClient client = MongoClients.create(setupConnectionString(configHandler));
         this.database = client.getDatabase(configHandler.dataBaseDataBase());

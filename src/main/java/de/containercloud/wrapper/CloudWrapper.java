@@ -4,12 +4,13 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.transport.DockerHttpClient;
+import de.containercloud.api.service.ServiceManager;
+import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.impl.service.ServiceManagerImpl;
+import de.containercloud.registry.CloudRegistryImpl;
 import de.containercloud.websocket.CloudSocketServer;
 import lombok.Getter;
 import org.slf4j.Logger;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Getter
 public class CloudWrapper {
@@ -19,8 +20,11 @@ public class CloudWrapper {
     private final DockerClient dockerClient;
     private final CloudContainerWrapper containerWrapper;
     private final CloudSocketServer socketServer;
+    private final MongoDatabaseHandler databaseHandler;
+    private final ServiceManagerImpl serviceManager;
 
-    public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, Logger logger) {
+    public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, Logger logger, MongoDatabaseHandler databaseHandler, CloudRegistryImpl registry) {
+        this.databaseHandler = databaseHandler;
 
         INSTANCE = this;
 
@@ -28,12 +32,13 @@ public class CloudWrapper {
 
         logger.info("Starting Cloud Wrapper...");
 
-        this.containerWrapper = new CloudContainerWrapper(this.dockerClient);
+        this.containerWrapper = new CloudContainerWrapper(this.dockerClient, this.databaseHandler);
         this.socketServer = new CloudSocketServer();
 
-        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-            this.dockerClient.pingCmd().exec();
-        }, 10, TimeUnit.SECONDS);
+        this.serviceManager = new ServiceManagerImpl();
+
+        registry.addService(ServiceManager.class, serviceManager);
+
     }
 
 

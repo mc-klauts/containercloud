@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class CloudAPI {
 
+    @Getter
     private static CloudAPI CLOUD_API;
     private final CloudRegistry cloudRegistry;
 

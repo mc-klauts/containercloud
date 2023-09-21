@@ -28,9 +28,7 @@ public class ListServices {
 
         });
 
-        wsConfig.onClose(wsCloseContext -> {
-            SESSIONS.remove(wsCloseContext.session);
-        });
+        wsConfig.onClose(wsCloseContext -> SESSIONS.remove(wsCloseContext.session));
 
         wsConfig.onMessage(wsMessageContext -> {
 

@@ -6,9 +6,13 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient.Request;
 import com.github.dockerjava.transport.DockerHttpClient.Response;
+import de.containercloud.api.CloudAPI;
 import de.containercloud.config.ConfigHandler;
+import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.json.JsonBodyHandler;
+import de.containercloud.registry.CloudRegistryImpl;
 import de.containercloud.wrapper.CloudWrapper;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +32,15 @@ public class ContainerCloudInstance {
         initHttpClient();
         checkDockerConnection();
         healthCheck();
-        new ConfigHandler(this.logger);
-        CloudWrapper wrapper = new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger);
+
+        val configHandler = new ConfigHandler(this.logger);
+
+        MongoDatabaseHandler databaseHandler = new MongoDatabaseHandler(configHandler);
+
+        val registry = new CloudRegistryImpl();
+        new CloudAPI(registry);
+
+        CloudWrapper wrapper = new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger, databaseHandler, registry);
 
         addShutDownHookForHttpClient();
     }
