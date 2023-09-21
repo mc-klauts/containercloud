@@ -4,9 +4,8 @@ import de.containercloud.api.service.Service;
 import de.containercloud.api.service.ServiceBuilder;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoProvider;
+import de.containercloud.wrapper.CloudWrapper;
 import lombok.NonNull;
-
-import java.util.UUID;
 
 public class ServiceManagerImpl implements ServiceManager {
     @Override
@@ -21,13 +20,11 @@ public class ServiceManagerImpl implements ServiceManager {
 
     @Override
     public Service createService(ServiceBuilder builder) {
-
-
-
+        return CloudWrapper.getINSTANCE().getContainerWrapper().runService(builder.task());
     }
 
     @Override
     public boolean removeService(String serviceId) {
-        return false;
+        return CloudWrapper.getINSTANCE().getContainerWrapper().removeService(serviceId);
     }
 }
