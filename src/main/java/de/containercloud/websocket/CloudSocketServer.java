@@ -22,5 +22,20 @@ public class CloudSocketServer {
             response.sendRedirect("/services/list");
 
         });
+
+        this.javalin.get("/services/create", ctx -> {
+
+            val request = ctx.req();
+
+            val response = ctx.res();
+            if (request.getMethod().equals("POST")) {
+                response.sendError(405, "Body is required for request!");
+                return;
+            }
+
+            
+
+        });
+
     }
 }

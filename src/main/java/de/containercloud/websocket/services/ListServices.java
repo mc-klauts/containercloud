@@ -1,9 +1,10 @@
 package de.containercloud.websocket.services;
 
 import com.google.gson.Gson;
+import de.containercloud.api.service.Service;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.websocket.WsConfig;
-import lombok.val;
+import lombok.SneakyThrows;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -23,12 +24,6 @@ public class ListServices {
 
             SESSIONS.add(ctx.session);
 
-            //val response = ctx.getUpgradeCtx$javalin().res();
-            //response.addHeader("Upgrade", "websocket");
-            //response.addHeader("Connection", "Connection");
-            //response.addHeader("Sec-WebSocket-Accept", ctx.header("Sec-WebSocket-Key"));
-            //response.setStatus(101);
-
             ctx.session.getRemote().sendString("Handshake-Accepted!");
 
         });
@@ -46,6 +41,14 @@ public class ListServices {
             wsMessageContext.session.getRemote().sendString(new Gson().toJson(CloudWrapper.getINSTANCE().getContainerWrapper().listRunningContainers()));
 
         });
+
+    }
+
+    @SneakyThrows
+    public static void broadcastServiceUpdate(List<Service> services) {
+
+        for (Session session : SESSIONS)
+            session.getRemote().sendString(new Gson().toJson(services));
 
     }
 }
