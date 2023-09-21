@@ -1,23 +1,10 @@
 package de.containercloud.api.registry;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface CloudRegistry extends CloudService {
 
-public class CloudRegistry {
+    <T extends CloudService> T getInstance(Class<T> clazz);
 
-    private final Map<Class<?>, Object> servicePoint = new HashMap<>();
-
-    @SuppressWarnings("unchecked")
-    public <T extends CloudService> T getInstance(Class<T> clazz) {
-        if (!this.servicePoint.containsKey(clazz))
-            return null;
-
-        return ((T) this.servicePoint.get(clazz));
-    }
-
-    public void addService(CloudService service) {
-        this.servicePoint.put(service.getClass(), service);
-    }
+    //void addService(Class<? extends CloudService> clazz, CloudService service);
 
 
 }
