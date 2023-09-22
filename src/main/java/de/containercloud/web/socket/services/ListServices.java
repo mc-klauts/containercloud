@@ -1,4 +1,4 @@
-package de.containercloud.websocket.services;
+package de.containercloud.web.socket.services;
 
 import com.google.gson.Gson;
 import de.containercloud.api.service.Service;
