@@ -6,10 +6,10 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.mongodb.client.model.Filters;
 import de.containercloud.api.service.Service;
-import de.containercloud.api.service.ServiceManager;
 import de.containercloud.api.task.Task;
 import de.containercloud.database.CloudMongoCollection;
 import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.service.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -32,7 +32,7 @@ public class CloudContainerWrapper {
 
     private String createServiceName(Task task) {
 
-        val collection = this.databaseHandler.getConfigHandler().getCollection(CloudMongoCollection.CollectionTypes.SERVICE);
+        val collection = EnvConfig.getCollectionEnv(CloudMongoCollection.CollectionTypes.SERVICE);
 
         this.databaseHandler.collection(collection).find(Filters.eq(""));
 
