@@ -67,7 +67,7 @@ public class MongoDatabaseHandler {
         val host = configHandler.dataBaseHost();
 
         return new ConnectionString(
-                "mongodb:" +
+                "mongodb" +
                         (configHandler.isSrvEnabled() ? "+srv://" : "://") +
                         user + ":" + password + "@" + host + ":" + port + "/" + dataBase);
 
