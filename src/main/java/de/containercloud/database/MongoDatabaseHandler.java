@@ -2,24 +2,21 @@ package de.containercloud.database;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
-import de.containercloud.config.ConfigHandler;
-import lombok.Getter;
+import de.containercloud.env.EnvConfig;
 import lombok.val;
 import org.bson.Document;
 
 public class MongoDatabaseHandler {
 
     private final MongoDatabase database;
-    @Getter
-    private final ConfigHandler configHandler;
 
-    public MongoDatabaseHandler(ConfigHandler configHandler) {
-        this.configHandler = configHandler;
+    public MongoDatabaseHandler() {
 
-        MongoClient client = MongoClients.create(setupConnectionString(configHandler));
-        this.database = client.getDatabase(configHandler.dataBaseDataBase());
 
-        setupCollections(configHandler);
+        MongoClient client = MongoClients.create(setupConnectionString());
+        this.database = client.getDatabase(EnvConfig.getEnv("DATABASE.DATABASE"));
+
+        setupCollections();
 
         Runtime.getRuntime().addShutdownHook(new Thread(client::close));
     }
@@ -28,13 +25,13 @@ public class MongoDatabaseHandler {
         return this.database.getCollection(collection.collectionName());
     }
 
-    private void setupCollections(ConfigHandler configHandler) {
+    private void setupCollections() {
 
         val collections = this.database.listCollectionNames();
 
         for (CloudMongoCollection.CollectionTypes cloudCollection : CloudMongoCollection.CollectionTypes.values()) {
 
-            val collection = configHandler.getCollection(cloudCollection);
+            val collection = EnvConfig.getCollectionEnv(cloudCollection);
 
             if (!checkCollection(collection, collections))
                 this.database.createCollection(collection.collectionName());
@@ -58,17 +55,16 @@ public class MongoDatabaseHandler {
         return exist;
     }
 
-    private ConnectionString setupConnectionString(ConfigHandler configHandler) {
+    private ConnectionString setupConnectionString() {
 
-        val user = configHandler.dataBaseUser();
-        val password = configHandler.dataBasePassword();
-        val dataBase = configHandler.dataBaseDataBase();
-        val port = configHandler.dataBasePort();
-        val host = configHandler.dataBaseHost();
+        val user = EnvConfig.getEnv("DATABASE.USER");
+        val password = EnvConfig.getEnv("DATABASE.PASSWORD");
+        val dataBase = EnvConfig.getEnv("DATABASE.DATABASE");
+        val port = EnvConfig.getEnv("DATABASE.PORT");
+        val host = EnvConfig.getEnv("DATABASE.HOST");
 
         return new ConnectionString(
-                "mongodb" +
-                        (configHandler.isSrvEnabled() ? "+srv://" : "://") +
+                "mongodb://" +
                         user + ":" + password + "@" + host + ":" + port + "/" + dataBase);
 
     }

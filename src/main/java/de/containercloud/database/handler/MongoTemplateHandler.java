@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import de.containercloud.config.ConfigHandler;
 import de.containercloud.database.CloudMongoCollection;
 import de.containercloud.database.Handler;
 import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.template.TemplateImpl;
 import lombok.val;
 import org.bson.Document;
@@ -17,11 +17,9 @@ import java.util.List;
 public class MongoTemplateHandler extends Handler {
 
     private final MongoDatabaseHandler databaseHandler;
-    private final ConfigHandler configHandler;
 
-    public MongoTemplateHandler(MongoDatabaseHandler databaseHandler, ConfigHandler configHandler) {
+    public MongoTemplateHandler(MongoDatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
-        this.configHandler = configHandler;
     }
 
     public TemplateImpl template(String name) {
@@ -75,7 +73,7 @@ public class MongoTemplateHandler extends Handler {
     }
 
     protected MongoCollection<Document> collection() {
-        return this.databaseHandler.collection(this.configHandler.getCollection(CloudMongoCollection.CollectionTypes.TEMPLATE));
+        return this.databaseHandler.collection(EnvConfig.getCollectionEnv(CloudMongoCollection.CollectionTypes.TEMPLATE));
     }
 
 }

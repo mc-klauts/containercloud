@@ -7,7 +7,6 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient.Request;
 import com.github.dockerjava.transport.DockerHttpClient.Response;
 import de.containercloud.api.CloudAPI;
-import de.containercloud.config.ConfigHandler;
 import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.json.JsonBodyHandler;
 import de.containercloud.registry.CloudRegistryImpl;
@@ -33,9 +32,7 @@ public class ContainerCloudInstance {
         checkDockerConnection();
         healthCheck();
 
-        val configHandler = new ConfigHandler(this.logger);
-
-        MongoDatabaseHandler databaseHandler = new MongoDatabaseHandler(configHandler);
+        MongoDatabaseHandler databaseHandler = new MongoDatabaseHandler();
 
         val registry = new CloudRegistryImpl();
         new CloudAPI(registry);

@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import de.containercloud.config.ConfigHandler;
 import de.containercloud.database.CloudMongoCollection.CollectionTypes;
 import de.containercloud.database.Handler;
 import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.task.TaskImpl;
 import lombok.val;
 import org.bson.Document;
@@ -17,11 +17,9 @@ import java.util.List;
 public class MongoTaskHandler extends Handler {
 
     private final MongoDatabaseHandler databaseHandler;
-    private final ConfigHandler configHandler;
 
-    public MongoTaskHandler(MongoDatabaseHandler databaseHandler, ConfigHandler configHandler) {
+    public MongoTaskHandler(MongoDatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
-        this.configHandler = configHandler;
     }
 
     public TaskImpl task(String taskId) {
@@ -33,7 +31,7 @@ public class MongoTaskHandler extends Handler {
     }
 
     protected MongoCollection<Document> collection() {
-        return this.databaseHandler.collection(this.configHandler.getCollection(CollectionTypes.TASK));
+        return this.databaseHandler.collection(EnvConfig.getCollectionEnv(CollectionTypes.TASK));
     }
 
     public boolean existTask(String taskId) {

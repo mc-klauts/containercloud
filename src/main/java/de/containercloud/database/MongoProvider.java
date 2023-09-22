@@ -1,6 +1,5 @@
 package de.containercloud.database;
 
-import de.containercloud.config.ConfigHandler;
 import de.containercloud.database.handler.MongoServiceHandler;
 import de.containercloud.database.handler.MongoTaskHandler;
 import de.containercloud.database.handler.MongoTemplateHandler;
@@ -16,12 +15,12 @@ public class MongoProvider {
     private final MongoTaskHandler taskHandler;
     private final MongoTemplateHandler templateHandler;
 
-    public MongoProvider(MongoDatabaseHandler databaseHandler, ConfigHandler configHandler) {
+    public MongoProvider(MongoDatabaseHandler databaseHandler) {
         INSTANCE = this;
 
-        this.serviceHandler = new MongoServiceHandler(databaseHandler, configHandler);
-        this.taskHandler = new MongoTaskHandler(databaseHandler, configHandler);
-        this.templateHandler = new MongoTemplateHandler(databaseHandler, configHandler);
+        this.serviceHandler = new MongoServiceHandler(databaseHandler);
+        this.taskHandler = new MongoTaskHandler(databaseHandler);
+        this.templateHandler = new MongoTemplateHandler(databaseHandler);
     }
 
 }
