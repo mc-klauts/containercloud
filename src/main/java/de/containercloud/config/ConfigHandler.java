@@ -4,6 +4,7 @@ import de.containercloud.ContainerCloud;
 import de.containercloud.database.CloudMongoCollection;
 import lombok.val;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -41,32 +42,39 @@ public class ConfigHandler {
         new ConfigEnvChecker(this);
     }
 
+    private JSONObject dataBase() {
+        return ((JSONObject) this.jsonFile.get("database"));
+    }
+
     public String dataBaseHost() {
-        return this.jsonFile.getString("database.host");
+        return ((String) dataBase().get("host"));
     }
 
     public String dataBasePort() {
-        return this.jsonFile.getString("database.port");
+        return ((String) dataBase().get("port"));
     }
 
     public String dataBaseUser() {
-        return this.jsonFile.getString("database.user");
+        return ((String) dataBase().get("user"));
     }
 
     public String dataBaseDataBase() {
-        return this.jsonFile.getString("database.database");
+        return ((String) dataBase().get("database"));
     }
 
     public String dataBasePassword() {
-        return this.jsonFile.getString("database.password");
+        return ((String) dataBase().get("password"));
     }
 
     public boolean isSrvEnabled() {
-        return ((boolean) this.jsonFile.get("database.enableSrv"));
+        return ((boolean) dataBase().get("enableSrv"));
     }
 
+    @SuppressWarnings("unchecked")
     public void setDataBase(String path, Object value) {
-        this.jsonFile.set("database." + path, value);
+        val jsonObject = dataBase();
+        jsonObject.put(path, value);
+        this.jsonFile.set("database", jsonObject);
         this.jsonFile.saveFile();
     }
 

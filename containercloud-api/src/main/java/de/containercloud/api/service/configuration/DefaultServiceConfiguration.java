@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultServiceConfiguration implements ServiceConfiguration {
-    private final int runningPort;
+    private final PortPair runningPort;
     private final MinecraftVersion minecraftVersion;
 
     @Override
-    public int runningPort() {
+    public PortPair runningPort() {
         return runningPort;
     }
 

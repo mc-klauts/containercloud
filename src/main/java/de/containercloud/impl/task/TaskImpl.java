@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskImpl implements Task {
 
-    private final ServiceType type;
     private final String taskId;
     private final List<String> runningServices;
     private final ServiceConfigurationImpl serviceConfiguration;
@@ -23,11 +22,6 @@ public class TaskImpl implements Task {
     @Override
     public String taskId() {
         return this.taskId;
-    }
-
-    @Override
-    public ServiceType type() {
-        return type;
     }
 
     @Override

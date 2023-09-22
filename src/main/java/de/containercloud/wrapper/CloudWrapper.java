@@ -4,11 +4,13 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.transport.DockerHttpClient;
+import de.containercloud.api.event.EventManager;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.impl.event.EventManagerImpl;
 import de.containercloud.impl.service.ServiceManagerImpl;
 import de.containercloud.registry.CloudRegistryImpl;
-import de.containercloud.websocket.CloudSocketServer;
+import de.containercloud.web.CloudSocketServer;
 import lombok.Getter;
 import org.slf4j.Logger;
 
@@ -22,6 +24,7 @@ public class CloudWrapper {
     private final CloudSocketServer socketServer;
     private final MongoDatabaseHandler databaseHandler;
     private final ServiceManagerImpl serviceManager;
+    private final EventManagerImpl eventManager;
 
     public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, Logger logger, MongoDatabaseHandler databaseHandler, CloudRegistryImpl registry) {
         this.databaseHandler = databaseHandler;
@@ -39,6 +42,9 @@ public class CloudWrapper {
 
         registry.addService(ServiceManager.class, serviceManager);
 
+        this.eventManager = new EventManagerImpl();
+
+        registry.addService(EventManager.class, eventManager);
     }
 
 
