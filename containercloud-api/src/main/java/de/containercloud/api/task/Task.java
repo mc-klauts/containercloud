@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface Task {
 
-    ServiceType type();
-
+    /**
+     * @return all running services as serviceId
+     * */
     List<String> runningServices();
 
     ServiceConfiguration configuration();
@@ -19,6 +20,10 @@ public interface Task {
      */
     Template template();
 
+    /**
+     * @param template the new template for the task
+     * @return if the template update was successfully
+     * */
     boolean template(Template template);
 
     String taskId();

@@ -4,7 +4,14 @@ import de.containercloud.api.MinecraftVersion;
 
 public interface ServiceConfiguration {
 
-    int runningPort();
+    /**
+     * @return the port range to the task
+     * */
+    PortPair runningPort();
+
+    /**
+     * @see MinecraftVersion for detailed description
+     * */
     MinecraftVersion version();
 
 }
