@@ -72,7 +72,7 @@ public class MongoTaskHandler extends Handler {
             return false;
 
         this.collection().updateOne(Filters.eq("taskId", task.taskId()), List.of(
-                Updates.set("type", task.type().toString()),
+                Updates.set("type", task.configuration().version().type().name()),
                 Updates.set("runningServices", task.runningServices()),
                 Updates.set("template", task.template().toString())
         ));
