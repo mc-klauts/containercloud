@@ -10,7 +10,7 @@ import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.impl.event.EventManagerImpl;
 import de.containercloud.impl.service.ServiceManagerImpl;
 import de.containercloud.registry.CloudRegistryImpl;
-import de.containercloud.websocket.CloudSocketServer;
+import de.containercloud.web.CloudSocketServer;
 import lombok.Getter;
 import org.slf4j.Logger;
 
