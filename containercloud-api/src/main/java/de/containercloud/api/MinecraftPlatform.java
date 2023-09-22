@@ -17,4 +17,9 @@ public enum MinecraftPlatform {
 
         this.platformId = platformId;
     }
+
+    @Override
+    public String toString() {
+        return platformId;
+    }
 }
