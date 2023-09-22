@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  cloud:
+    depends_on: [ mongo ]
+    image: containercloud
+    volumes:
+      - cloud-data:/home
+    ports:
+      - "50000:50000"
+    environment:
+      - database.host=localhost
+      - database.port=27017
+      - database.user=root
+      - database.password=root
+      - database.srv=false
+  mongo:
+    image: mongo
+    ports:
+      - "9999:27107"
+    environment:
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=root
+
+volumes:
+  cloud-data:
+  mongo-cloud:
