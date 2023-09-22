@@ -12,7 +12,7 @@ public class CloudRegistryImpl implements CloudRegistry {
 
 
     @Override
-    public <T extends CloudService> T getInstance(Class<T> clazz) {
+    public <T extends CloudService> T getCloudService(Class<T> clazz) {
         if (!this.servicePoint.containsKey(clazz))
             return null;
 
