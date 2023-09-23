@@ -52,8 +52,6 @@ public class MongoTaskHandler extends Handler {
 
     public boolean deleteTask(String taskId) {
 
-        val collection = this.collection();
-
         if (!this.existTask(taskId))
             return false;
 
@@ -64,15 +62,13 @@ public class MongoTaskHandler extends Handler {
 
     public boolean updateTask(TaskImpl task) {
 
-        val collection = this.collection();
-
         if (!this.existTask(task.taskId()))
             return false;
 
         this.collection().updateOne(Filters.eq("taskId", task.taskId()), List.of(
                 Updates.set("type", task.configuration().version().type().name()),
                 Updates.set("runningServices", task.runningServices()),
-                Updates.set("template", task.template().toString())
+                Updates.set("template", task.getTemplate())
         ));
 
         return true;
