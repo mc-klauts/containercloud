@@ -1,17 +1,18 @@
 package de.containercloud.impl.task;
 
 import com.google.gson.Gson;
-import de.containercloud.api.ServiceType;
 import de.containercloud.api.service.configuration.ServiceConfiguration;
 import de.containercloud.api.task.Task;
 import de.containercloud.api.template.Template;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.service.ServiceConfigurationImpl;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class TaskImpl implements Task {
 
     private final String taskId;
