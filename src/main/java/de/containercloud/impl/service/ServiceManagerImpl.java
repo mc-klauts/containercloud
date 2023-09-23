@@ -4,6 +4,7 @@ import de.containercloud.api.service.Service;
 import de.containercloud.api.service.ServiceBuilder;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoProvider;
+import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.wrapper.CloudWrapper;
 import lombok.NonNull;
 
@@ -20,7 +21,7 @@ public class ServiceManagerImpl implements ServiceManager {
 
     @Override
     public Service createService(ServiceBuilder builder) {
-        return CloudWrapper.getINSTANCE().getContainerWrapper().runService(builder.task());
+        return CloudWrapper.getINSTANCE().getContainerWrapper().runService((TaskImpl) builder.task());
     }
 
     @Override
