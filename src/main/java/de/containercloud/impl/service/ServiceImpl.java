@@ -1,5 +1,6 @@
 package de.containercloud.impl.service;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.containercloud.api.service.Service;
 import de.containercloud.api.task.Task;
 import de.containercloud.database.MongoProvider;
@@ -9,8 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ServiceImpl implements Service {
 
+    @JsonSerialize
     private final String serviceId;
+    @JsonSerialize
     private final String taskId;
+    @JsonSerialize
     private final String serviceName;
 
     @Override
@@ -42,4 +46,6 @@ public class ServiceImpl implements Service {
     public String serviceName() {
         return this.serviceName;
     }
+
+
 }
