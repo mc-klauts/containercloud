@@ -8,8 +8,13 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateServiceRequest implements Handler {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
 
@@ -24,6 +29,7 @@ public class CreateServiceRequest implements Handler {
         val body = new Gson().fromJson(ctx.body(), CreateServiceBody.class);
 
         if (!MongoProvider.getINSTANCE().getTaskHandler().existTask(body.taskId())) {
+            logger.warn("TaskId can't be found in request");
             ctx.res().sendError(404, "TaskId can't be found!");
             return;
         }
