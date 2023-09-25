@@ -12,6 +12,7 @@ import de.containercloud.impl.task.TaskImpl;
 import lombok.val;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MongoTaskHandler extends Handler {
@@ -20,6 +21,18 @@ public class MongoTaskHandler extends Handler {
 
     public MongoTaskHandler(MongoDatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
+    }
+
+    public List<TaskImpl> tasks() {
+
+        val documents = collection().find();
+
+
+        val list = new ArrayList<TaskImpl>();
+
+        documents.forEach(document -> list.add(getGson().fromJson(document.toJson(), TaskImpl.class)));
+
+        return list;
     }
 
     public TaskImpl task(String taskId) {
@@ -67,7 +80,6 @@ public class MongoTaskHandler extends Handler {
 
         this.collection().updateOne(Filters.eq("taskId", task.taskId()), List.of(
                 Updates.set("type", task.configuration().version().type().name()),
-                Updates.set("runningServices", task.runningServices()),
                 Updates.set("template", task.getTemplate())
         ));
 
