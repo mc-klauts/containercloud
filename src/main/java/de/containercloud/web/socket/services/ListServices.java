@@ -2,6 +2,7 @@ package de.containercloud.web.socket.services;
 
 import com.google.gson.Gson;
 import de.containercloud.api.service.Service;
+import de.containercloud.web.TokenChecker;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.websocket.WsConfig;
 import lombok.SneakyThrows;
@@ -18,8 +19,7 @@ public class ListServices {
 
         wsConfig.onConnect(ctx -> {
 
-            // TODO - change token
-            if (!ctx.header("Bearer").equals("test"))
+            if (!TokenChecker.isTokenValid(ctx.header("Bearer")))
                 return;
 
             SESSIONS.add(ctx.session);
@@ -30,13 +30,12 @@ public class ListServices {
 
         wsConfig.onClose(wsCloseContext -> SESSIONS.remove(wsCloseContext.session));
 
-        wsConfig.onMessage(wsMessageContext -> {
+        wsConfig.onMessage(ctx -> {
 
-            // TODO - change token
-            if (!wsMessageContext.header("Bearer").equals("test"))
+            if (!TokenChecker.isTokenValid(ctx.header("Bearer")))
                 return;
 
-            wsMessageContext.session.getRemote().sendString(new Gson().toJson(CloudWrapper.getINSTANCE().getContainerWrapper().listRunningContainers()));
+            ctx.session.getRemote().sendString(new Gson().toJson(CloudWrapper.getINSTANCE().getContainerWrapper().listRunningContainers()));
 
         });
 

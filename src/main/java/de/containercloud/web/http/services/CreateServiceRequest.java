@@ -18,7 +18,6 @@ public class CreateServiceRequest implements Handler {
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
 
-        // TODO - change token
         if (!ctx.header("Bearer").equals("test")) {
 
             ctx.res().sendError(401, "Token is invalid!");

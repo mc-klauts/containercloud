@@ -3,6 +3,7 @@ package de.containercloud.web.http.tasks;
 import com.google.gson.Gson;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.task.TaskImpl;
+import de.containercloud.web.TokenChecker;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import lombok.val;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class CreateTaskRequest implements Handler {
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
-        // TODO - change token
-        if (!ctx.header("Bearer").equals("test")) {
+
+        if (!TokenChecker.isTokenValid(ctx.header("Bearer"))) {
 
             ctx.res().sendError(401, "Token is invalid!");
 
