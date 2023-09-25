@@ -16,18 +16,12 @@ import java.util.List;
 public class TaskImpl implements Task {
 
     private final String taskId;
-    private final List<String> runningServices;
     private final ServiceConfigurationImpl serviceConfiguration;
     private String template;
 
     @Override
     public String taskId() {
         return this.taskId;
-    }
-
-    @Override
-    public List<String> runningServices() {
-        return this.runningServices;
     }
 
     @Override

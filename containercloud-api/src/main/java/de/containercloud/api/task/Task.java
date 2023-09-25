@@ -8,11 +8,6 @@ import java.util.List;
 
 public interface Task {
 
-    /**
-     * @return all running services as serviceId
-     * */
-    List<String> runningServices();
-
     ServiceConfiguration configuration();
 
     /**

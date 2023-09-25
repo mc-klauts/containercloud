@@ -40,8 +40,6 @@ public class CloudContainerWrapper {
 
                 val task = MongoProvider.getINSTANCE().getTaskHandler().task(taskId);
 
-                task.runningServices().remove(s);
-
                 MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
 
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -65,7 +63,7 @@ public class CloudContainerWrapper {
 
         this.databaseHandler.collection(collection).find(Filters.eq(""));
 
-        return task.taskId() + "-" + task.runningServices().size();
+        return task.taskId() + "-" + System.currentTimeMillis();
     }
 
     public ServiceImpl runService(TaskImpl task) {
@@ -85,8 +83,6 @@ public class CloudContainerWrapper {
 
 
         val id = response.getId();
-
-        task.runningServices().add(id);
 
         MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
 
