@@ -1,6 +1,7 @@
 package de.containercloud.web;
 
 import de.containercloud.web.http.services.CreateServiceRequest;
+import de.containercloud.web.http.services.DeleteServiceRequest;
 import de.containercloud.web.http.tasks.CreateTaskRequest;
 import de.containercloud.web.http.tasks.DeleteTaskRequest;
 import de.containercloud.web.socket.services.ListServices;
@@ -19,21 +20,21 @@ public class CloudSocketServer {
         // Websockets
 
         // Services
-        this.javalin.ws("/services/list", ListServices::new);
+        this.javalin.ws("/list/services", ListServices::new);
 
         // Tasks
-        this.javalin.ws("/tasks/list", ListTasks::new);
+        this.javalin.ws("/list/tasks", ListTasks::new);
 
 
         // Http
 
         // Services
-        this.javalin.post("/services/create", new CreateServiceRequest());
-        this.javalin.post("/services/delete", new DeleteTaskRequest());
+        this.javalin.post("/create/service", new CreateServiceRequest());
+        this.javalin.post("/delete/service", new DeleteServiceRequest());
 
         // Tasks
-        this.javalin.post("/tasks/create", new CreateTaskRequest());
-        this.javalin.delete("/tasks/delete", new DeleteTaskRequest());
+        this.javalin.post("/create/task", new CreateTaskRequest());
+        this.javalin.delete("/delete/task", new DeleteTaskRequest());
 
     }
 }
