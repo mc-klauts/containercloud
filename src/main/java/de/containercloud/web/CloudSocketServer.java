@@ -2,6 +2,7 @@ package de.containercloud.web;
 
 import de.containercloud.web.http.services.CreateServiceRequest;
 import de.containercloud.web.http.services.DeleteServiceRequest;
+import de.containercloud.web.http.services.GetServiceRequest;
 import de.containercloud.web.http.tasks.CreateTaskRequest;
 import de.containercloud.web.http.tasks.DeleteTaskRequest;
 import de.containercloud.web.socket.services.ListServices;
@@ -31,6 +32,7 @@ public class CloudSocketServer {
         // Services
         this.javalin.post("/create/service", new CreateServiceRequest());
         this.javalin.post("/delete/service", new DeleteServiceRequest());
+        this.javalin.post("/get/service", new GetServiceRequest());
 
         // Tasks
         this.javalin.post("/create/task", new CreateTaskRequest());
