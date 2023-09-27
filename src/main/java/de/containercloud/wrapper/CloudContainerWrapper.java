@@ -13,6 +13,7 @@ import de.containercloud.database.MongoProvider;
 import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.service.ServiceImpl;
 import de.containercloud.impl.task.TaskImpl;
+import de.containercloud.shutdown.ShutdownService;
 import de.containercloud.web.socket.services.ListServices;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +33,7 @@ public class CloudContainerWrapper {
         this.dockerClient = dockerClient;
         this.databaseHandler = databaseHandler;
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-
+        ShutdownService.addShutdown(1, o -> {
             runningContainers.keySet().forEach(s -> {
 
                 val taskId = runningContainers.get(s).task().taskId();
@@ -42,15 +42,16 @@ public class CloudContainerWrapper {
 
                 MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
 
-                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                ShutdownService.addShutdown(2, o1 -> {
                     this.dockerClient.stopContainerCmd(s).exec();
                     this.dockerClient.removeContainerCmd(s).exec();
-                }));
+                });
 
             });
 
             runningContainers.clear();
-        }));
+
+        });
     }
 
     public List<String> listRunningContainers() {

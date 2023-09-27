@@ -11,6 +11,7 @@ import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.json.JsonBodyHandler;
 import de.containercloud.registry.CloudRegistryImpl;
+import de.containercloud.shutdown.ShutdownService;
 import de.containercloud.wrapper.CloudWrapper;
 import lombok.val;
 import org.slf4j.Logger;
@@ -34,7 +35,9 @@ public class ContainerCloudInstance {
         healthCheck();
 
 
+        new ShutdownService();
         MongoDatabaseHandler databaseHandler = new MongoDatabaseHandler();
+
         new MongoProvider(databaseHandler);
 
         val registry = new CloudRegistryImpl();
@@ -60,13 +63,14 @@ public class ContainerCloudInstance {
     }
 
     private void addShutDownHookForHttpClient() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+
+        ShutdownService.addShutdown(101, o -> {
             try {
                 this.httpClient.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }));
+        });
     }
 
     private void initDockerClientConfig() {

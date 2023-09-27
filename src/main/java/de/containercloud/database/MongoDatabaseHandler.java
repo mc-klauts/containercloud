@@ -3,6 +3,7 @@ package de.containercloud.database;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import de.containercloud.env.EnvConfig;
+import de.containercloud.shutdown.ShutdownService;
 import lombok.val;
 import org.bson.Document;
 
@@ -17,8 +18,7 @@ public class MongoDatabaseHandler {
         this.database = client.getDatabase(EnvConfig.getEnv("DATABASE.DATABASE"));
 
         setupCollections();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(client::close));
+        ShutdownService.addShutdown(100, o -> client.close());
     }
 
     public MongoCollection<Document> collection(CloudMongoCollection collection) {
