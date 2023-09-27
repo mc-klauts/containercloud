@@ -29,7 +29,7 @@ public class ShutdownService {
     public static void addShutdown(int priority, Consumer<?> closeable) {
 
         if (!CLOSE_LIST.containsKey(priority))
-            CLOSE_LIST.put(priority, new ArrayList<>())
+            CLOSE_LIST.put(priority, new ArrayList<>());
 
         val consumers = CLOSE_LIST.get(priority);
         consumers.add(closeable);

@@ -18,7 +18,7 @@ public class DeleteTaskRequest implements Handler {
         }
 
         if (MongoProvider.getINSTANCE().getTaskHandler().deleteTask(ctx.header("taskId")))
-            ctx.json("Task deleted")
+            ctx.json("Task deleted");
         else
             ctx.res().sendError(404, "Task can't be deleted (Not found)");
 
