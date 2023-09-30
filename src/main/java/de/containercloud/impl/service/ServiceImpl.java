@@ -2,6 +2,7 @@ package de.containercloud.impl.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.containercloud.api.service.Service;
+import de.containercloud.api.service.ServiceVolume;
 import de.containercloud.api.task.Task;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.wrapper.CloudWrapper;
@@ -16,6 +17,7 @@ public class ServiceImpl implements Service {
     private final String taskId;
     @JsonSerialize
     private final String serviceName;
+    private final String volumeId;
 
     @Override
     public boolean start() {
@@ -45,6 +47,11 @@ public class ServiceImpl implements Service {
     @Override
     public String serviceName() {
         return this.serviceName;
+    }
+
+    @Override
+    public ServiceVolume data() {
+        return CloudWrapper.getINSTANCE().getVolumeWrapper().volume(volumeId);
     }
 
 

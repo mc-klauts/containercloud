@@ -29,4 +29,6 @@ public interface Service {
 
     String serviceName();
 
+    ServiceVolume data();
+
 }
