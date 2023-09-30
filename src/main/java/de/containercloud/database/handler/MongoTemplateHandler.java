@@ -66,7 +66,7 @@ public class MongoTemplateHandler extends Handler {
             return false;
 
         this.collection().updateOne(Filters.eq("name", template.name()), List.of(
-                Updates.set("path", template.path())
+                Updates.set("path", template.externalPath())
         ));
 
         return true;

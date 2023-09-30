@@ -2,7 +2,15 @@ package de.containercloud.api.template;
 
 public interface Template {
 
-    String path();
+    /**
+     * @return path inside docker container
+     * */
+    String internalPath();
+
+    /**
+     * @return path outside docker container
+     * */
+    String externalPath();
     String name();
 
 }
