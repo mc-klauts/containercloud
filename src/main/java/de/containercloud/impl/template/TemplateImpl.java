@@ -2,16 +2,7 @@ package de.containercloud.impl.template;
 
 import de.containercloud.api.template.Template;
 
-public class TemplateImpl implements Template {
-    @Override
-    public String path() {
-        return null;
-    }
-
-    @Override
-    public String name() {
-        return null;
-    }
+public record TemplateImpl(String name, String internalPath, String externalPath) implements Template {
 
     @Override
     public String toString() {
