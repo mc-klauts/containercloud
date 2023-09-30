@@ -13,6 +13,7 @@ import de.containercloud.registry.CloudRegistryImpl;
 import de.containercloud.web.CloudSocketServer;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 @Getter
@@ -26,8 +27,9 @@ public class CloudWrapper {
     private final MongoDatabaseHandler databaseHandler;
     private final ServiceManagerImpl serviceManager;
     private final EventManagerImpl eventManager;
+    private final CloudVolumeWrapper volumeWrapper;
 
-    public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, Logger logger, MongoDatabaseHandler databaseHandler, CloudRegistryImpl registry) {
+    public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, @NotNull Logger logger, MongoDatabaseHandler databaseHandler, @NotNull CloudRegistryImpl registry) {
         this.databaseHandler = databaseHandler;
 
         INSTANCE = this;
@@ -38,6 +40,7 @@ public class CloudWrapper {
 
         // Start all sub wrapper
         this.containerWrapper = new CloudContainerWrapper(this.dockerClient, this.databaseHandler);
+        this.volumeWrapper = new CloudVolumeWrapper(this.dockerClient, this.databaseHandler);
 
         logger.info("Starting Sockets...");
         this.socketServer = new CloudSocketServer();
