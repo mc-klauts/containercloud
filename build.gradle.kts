@@ -8,6 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://clojars.org/repo/")
 }
 
 tasks.withType(Jar::class) {
@@ -40,4 +41,7 @@ dependencies {
 
     // mongo
     implementation("org.mongodb:mongodb-driver-sync:4.10.2")
+
+    implementation("kryonet:kryonet:2.21")
+
 }
