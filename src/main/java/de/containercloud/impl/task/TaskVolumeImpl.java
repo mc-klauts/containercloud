@@ -8,9 +8,4 @@ public class TaskVolumeImpl implements Volume {
     public boolean cleanUp() {
         return false;
     }
-
-    @Override
-    public MinecraftVersion version() {
-        return null;
-    }
 }
