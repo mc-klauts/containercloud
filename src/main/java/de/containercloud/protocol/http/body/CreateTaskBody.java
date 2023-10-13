@@ -1,4 +1,4 @@
-package de.containercloud.web.http.body;
+package de.containercloud.protocol.http.body;
 
 import de.containercloud.api.ServiceType;
 import de.containercloud.impl.service.ServiceConfigurationImpl;

@@ -1,12 +1,12 @@
-package de.containercloud.web;
+package de.containercloud.protocol;
 
-import de.containercloud.web.http.services.CreateServiceRequest;
-import de.containercloud.web.http.services.DeleteServiceRequest;
-import de.containercloud.web.http.services.GetServiceRequest;
-import de.containercloud.web.http.tasks.CreateTaskRequest;
-import de.containercloud.web.http.tasks.DeleteTaskRequest;
-import de.containercloud.web.socket.services.ListServices;
-import de.containercloud.web.socket.tasks.ListTasks;
+import de.containercloud.protocol.http.services.CreateServiceRequest;
+import de.containercloud.protocol.http.services.DeleteServiceRequest;
+import de.containercloud.protocol.http.services.GetServiceRequest;
+import de.containercloud.protocol.http.tasks.CreateTaskRequest;
+import de.containercloud.protocol.http.tasks.DeleteTaskRequest;
+import de.containercloud.protocol.socket.services.ListServices;
+import de.containercloud.protocol.socket.tasks.ListTasks;
 import io.javalin.Javalin;
 
 public class CloudSocketServer {

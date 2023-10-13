@@ -1,8 +1,8 @@
-package de.containercloud.web.http.services;
+package de.containercloud.protocol.http.services;
 
 import com.google.gson.Gson;
 import de.containercloud.database.MongoProvider;
-import de.containercloud.web.http.body.CreateServiceBody;
+import de.containercloud.protocol.http.body.CreateServiceBody;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;

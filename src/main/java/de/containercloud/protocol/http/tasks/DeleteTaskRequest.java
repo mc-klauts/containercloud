@@ -1,7 +1,7 @@
-package de.containercloud.web.http.tasks;
+package de.containercloud.protocol.http.tasks;
 
 import de.containercloud.database.MongoProvider;
-import de.containercloud.web.TokenChecker;
+import de.containercloud.protocol.TokenChecker;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;

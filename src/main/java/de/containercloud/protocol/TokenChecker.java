@@ -1,4 +1,4 @@
-package de.containercloud.web;
+package de.containercloud.protocol;
 
 public class TokenChecker {
 

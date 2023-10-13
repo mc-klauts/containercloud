@@ -1,9 +1,9 @@
-package de.containercloud.web.http.tasks;
+package de.containercloud.protocol.http.tasks;
 
 import com.google.gson.Gson;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.task.TaskImpl;
-import de.containercloud.web.TokenChecker;
+import de.containercloud.protocol.TokenChecker;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import lombok.val;

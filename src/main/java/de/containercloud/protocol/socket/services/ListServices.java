@@ -1,8 +1,8 @@
-package de.containercloud.web.socket.services;
+package de.containercloud.protocol.socket.services;
 
 import com.google.gson.Gson;
 import de.containercloud.api.service.Service;
-import de.containercloud.web.TokenChecker;
+import de.containercloud.protocol.TokenChecker;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.websocket.WsConfig;
 import lombok.SneakyThrows;

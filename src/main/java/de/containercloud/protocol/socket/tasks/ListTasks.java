@@ -1,9 +1,9 @@
-package de.containercloud.web.socket.tasks;
+package de.containercloud.protocol.socket.tasks;
 
 import com.google.gson.Gson;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.task.TaskImpl;
-import de.containercloud.web.TokenChecker;
+import de.containercloud.protocol.TokenChecker;
 import io.javalin.websocket.WsConfig;
 import org.eclipse.jetty.websocket.api.Session;
 
