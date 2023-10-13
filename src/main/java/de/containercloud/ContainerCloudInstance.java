@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Properties;
 
 public class ContainerCloudInstance {
 
@@ -33,7 +34,6 @@ public class ContainerCloudInstance {
         initHttpClient();
         checkDockerConnection();
         healthCheck();
-
 
         new ShutdownService();
         MongoDatabaseHandler databaseHandler = new MongoDatabaseHandler();
@@ -74,11 +74,16 @@ public class ContainerCloudInstance {
     }
 
     private void initDockerClientConfig() {
+
+        Properties properties = new Properties();
+
+        properties.setProperty("DOCKER_TLS_VERIFY", "0");
+        properties.setProperty("DOCKER_HOST", "unix:///var/run/docker.sock");
+
         this.dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                .withDockerHost("unix:///var/run/docker.sock")
-                .withDockerTlsVerify(true)
-                .withDockerCertPath("/home/user/.docker")
+                .withProperties(properties)
                 .build();
+
     }
 
     private void checkDockerConnection() {
