@@ -1,20 +1,15 @@
 package de.containercloud.wrapper;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
-import com.mongodb.client.model.Filters;
+import com.github.dockerjava.api.model.*;
 import de.containercloud.api.service.Service;
 import de.containercloud.api.task.Task;
-import de.containercloud.database.CloudMongoCollection;
 import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.database.MongoProvider;
-import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.service.ServiceImpl;
 import de.containercloud.impl.task.TaskImpl;
+import de.containercloud.protocol.socket.services.ListServices;
 import de.containercloud.shutdown.ShutdownService;
-import de.containercloud.web.socket.services.ListServices;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,25 +54,43 @@ public class CloudContainerWrapper {
     }
 
     private @NotNull String createServiceName(Task task) {
-
-        val collection = EnvConfig.getCollectionEnv(CloudMongoCollection.CollectionTypes.SERVICE);
-
-        this.databaseHandler.collection(collection).find(Filters.eq(""));
-
-        return task.taskId() + "-" + System.currentTimeMillis();
+        return task.taskId() + "-" + task.runningServices() + 1;
     }
 
     public ServiceImpl runService(TaskImpl task) {
 
         val serviceName = createServiceName(task);
 
+        // create container volume
+        val containerVolume = new Volume("/data");
+
+        Bind bind = new Bind("/home/theccloud/services/" + serviceName, containerVolume)
+
+        // TODO - specify custom docker image
         val createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
+
                 .withName("cloud-" + serviceName)
+
+                .withHostConfig(HostConfig.newHostConfig()
+
+                        .withPortBindings(new PortBinding(
+                                Ports.Binding.bindPortRange(
+                                        task.configuration().runningPort().from(),
+                                        task.configuration().runningPort().to()
+                                ), ExposedPort.tcp(25565)))
+
+                        .withBinds(bind))
+
                 .withEnv("TYPE=" + task.configuration().version().platform().getPlatformId(),
                         "EULA=true");
 
-        createContainer
-                .getHostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPortRange(task.configuration().runningPort().from(), task.configuration().runningPort().to()), ExposedPort.tcp(25565)));
+        // TODO - make mount path changeable
+
+
+        // TODO copy files from template
+
+        createContainer.withVolumes(containerVolume);
+
 
         val response = createContainer.withVolumes()
                 .exec();
