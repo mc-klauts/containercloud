@@ -1,4 +1,4 @@
-package de.containercloud.api.packets;
+package de.containercloud.api.packets.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
