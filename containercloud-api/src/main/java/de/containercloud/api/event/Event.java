@@ -2,7 +2,7 @@ package de.containercloud.api.event;
 
 public interface Event {
 
-    String eventType();
+    EventType eventType();
 
-    void onTrigger(EventData data);
+    void onTrigger(GsonData data);
 }

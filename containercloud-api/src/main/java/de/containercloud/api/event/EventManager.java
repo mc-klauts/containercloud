@@ -8,5 +8,5 @@ public interface EventManager extends CloudService {
     void register(Event event);
 
     // This Methode is for calling an Event
-    void callEvent(String eventType, EventData eventData);
+    void callEvent(EventType eventType, GsonData gsonData);
 }

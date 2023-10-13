@@ -1,8 +1,9 @@
 package de.containercloud.impl.event;
 
 import de.containercloud.api.event.Event;
-import de.containercloud.api.event.EventData;
+import de.containercloud.api.event.GsonData;
 import de.containercloud.api.event.EventManager;
+import de.containercloud.api.event.EventType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,10 @@ public class EventManagerImpl implements EventManager {
         this.events.add(event);
     }
 
-    @Override
-    public void callEvent(String eventType, EventData eventData) {
+    public void callEvent(EventType eventType, GsonData gsonData) {
         for (Event event : events) {
             if(event.eventType().equals(eventType)) {
-                event.onTrigger(eventData);
+                event.onTrigger(gsonData);
             }
         }
     }
