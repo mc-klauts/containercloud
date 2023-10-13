@@ -14,4 +14,6 @@ public interface ServiceConfiguration {
      * */
     MinecraftVersion version();
 
+    int maxServices();
+
 }
