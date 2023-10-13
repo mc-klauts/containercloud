@@ -1,6 +1,6 @@
-package de.containercloud.web.http.services;
+package de.containercloud.protocol.http.services;
 
-import de.containercloud.web.TokenChecker;
+import de.containercloud.protocol.TokenChecker;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
