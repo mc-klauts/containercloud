@@ -42,6 +42,6 @@ dependencies {
     // mongo
     implementation("org.mongodb:mongodb-driver-sync:4.10.2")
 
-    implementation("kryonet:kryonet:2.21")
+    implementation("com.esotericsoftware:kryonet:2.22.0-RC1")
 
 }
