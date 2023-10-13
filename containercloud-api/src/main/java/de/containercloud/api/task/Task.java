@@ -20,5 +20,7 @@ public interface Task {
 
     String taskId();
 
+    int runningServices();
+
 
 }
