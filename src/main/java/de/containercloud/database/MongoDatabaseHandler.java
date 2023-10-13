@@ -1,6 +1,7 @@
 package de.containercloud.database;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
 import de.containercloud.env.EnvConfig;
 import de.containercloud.shutdown.ShutdownService;
@@ -12,13 +13,16 @@ public class MongoDatabaseHandler {
     private final MongoDatabase database;
 
     public MongoDatabaseHandler() {
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(setupConnectionString())
+                .build();
 
+        try (MongoClient client = MongoClients.create(settings)) {
+            this.database = client.getDatabase(EnvConfig.getEnv("DATABASE.DATABASE"));
 
-        MongoClient client = MongoClients.create(setupConnectionString());
-        this.database = client.getDatabase(EnvConfig.getEnv("DATABASE.DATABASE"));
-
-        setupCollections();
-        ShutdownService.addShutdown(100, o -> client.close());
+            setupCollections();
+            ShutdownService.addShutdown(100, o -> client.close());
+        }
     }
 
     public MongoCollection<Document> collection(CloudMongoCollection collection) {
@@ -65,7 +69,7 @@ public class MongoDatabaseHandler {
 
         return new ConnectionString(
                 "mongodb://" +
-                        user + ":" + password + "@" + host + ":" + port + "/" + dataBase);
+                        user + ":" + password + "@" + host + ":" + port + "/?authMechanism=SCRAM-SHA-256&authSource=" + dataBase);
 
     }
 }
