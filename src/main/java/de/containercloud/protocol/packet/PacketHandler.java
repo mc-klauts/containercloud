@@ -1,5 +1,6 @@
 package de.containercloud.protocol.packet;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -12,14 +13,11 @@ import de.containercloud.api.packets.response.SuccessResponse;
 import de.containercloud.api.security.Verification;
 import de.containercloud.database.handler.MongoVerificationHandler;
 import de.containercloud.impl.event.EventManagerImpl;
-import lombok.val;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 ;
 
@@ -36,7 +34,7 @@ public class PacketHandler {
 
         this.server = new Server();
 
-        val kryo = server.getKryo();
+        Kryo kryo = server.getKryo();
 
         kryo.register(Packet.class);
         kryo.register(HashMap.class);
@@ -88,7 +86,7 @@ public class PacketHandler {
 
                         if (verifications.contains(verification)) {
 
-                            val responsePacket = new Packet(PacketType.CUSTOM);
+                            Packet responsePacket = new Packet(PacketType.CUSTOM);
 
                             responsePacket.addData("AUTHORIZATION", verification);
                             responsePacket.addData("CODE", 2); // already verified
@@ -96,7 +94,7 @@ public class PacketHandler {
                             return;
                         }
 
-                        val responsePacket = new Packet(PacketType.CUSTOM);
+                        Packet responsePacket = new Packet(PacketType.CUSTOM);
 
                         responsePacket.addData("AUTHORIZATION", verification);
                         responsePacket.addData("CODE", 1); // verified

@@ -32,8 +32,6 @@ dependencies {
 
     // 3rd party api's
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
     implementation("org.jetbrains:annotations:24.0.0")
 
@@ -43,7 +41,7 @@ dependencies {
     implementation("io.javalin:javalin:5.6.2")
 
     // mongo
-    implementation("org.mongodb:mongodb-driver-sync:4.10.2")
+    implementation("org.mongodb:mongodb-driver-reactivestreams:1.13.1")
 
     implementation("com.esotericsoftware:kryonet:2.22.0-RC1")
 

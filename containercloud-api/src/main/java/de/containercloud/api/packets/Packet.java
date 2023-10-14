@@ -1,19 +1,19 @@
 package de.containercloud.api.packets;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Packet {
 
     private final HashMap<String, Object> packetData = new HashMap<>();
-
-    @Getter
-    private PacketType packetType;
+    private final PacketType packetType;
 
     public Packet(PacketType packetType) {
         this.packetType = packetType;
+    }
+
+    public PacketType getPacketType() {
+        return packetType;
     }
 
     public void addData(String key, Object value) {

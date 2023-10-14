@@ -1,22 +1,32 @@
 package de.containercloud.impl.service;
 
+import com.mongodb.lang.NonNull;
 import de.containercloud.api.service.Service;
 import de.containercloud.api.service.ServiceBuilder;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.wrapper.CloudWrapper;
-import lombok.NonNull;
+
+import java.util.concurrent.ExecutionException;
 
 public class ServiceManagerImpl implements ServiceManager {
     @Override
     public Service withName(@NonNull String serviceName) {
-        return MongoProvider.getINSTANCE().getServiceHandler().service(serviceName);
+        try {
+            return MongoProvider.getINSTANCE().getServiceHandler().service(serviceName).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Service withId(String serviceId) {
-        return MongoProvider.getINSTANCE().getServiceHandler().serviceById(serviceId);
+        try {
+            return MongoProvider.getINSTANCE().getServiceHandler().serviceById(serviceId).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

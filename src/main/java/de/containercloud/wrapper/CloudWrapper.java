@@ -13,17 +13,13 @@ import de.containercloud.impl.service.ServiceManagerImpl;
 import de.containercloud.protocol.CloudSocketServer;
 import de.containercloud.protocol.packet.PacketHandler;
 import de.containercloud.registry.CloudRegistryImpl;
-import lombok.Getter;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 
-@Getter
 public class CloudWrapper {
 
-    @Getter
     private static CloudWrapper INSTANCE;
     private final DockerClient dockerClient;
     private final CloudContainerWrapper containerWrapper;
@@ -67,9 +63,41 @@ public class CloudWrapper {
 
         logger.info("CloudWrapper start finished!");
 
-        val cloudPullImages = new CloudPullImages(this.dockerClient);
+        CloudPullImages cloudPullImages = new CloudPullImages(this.dockerClient);
 
         cloudPullImages.pullImage("itzg/minecraft-server:latest");
+    }
+
+    public static CloudWrapper getINSTANCE() {
+        return INSTANCE;
+    }
+
+    public DockerClient getDockerClient() {
+        return dockerClient;
+    }
+
+    public CloudContainerWrapper getContainerWrapper() {
+        return containerWrapper;
+    }
+
+    public CloudSocketServer getSocketServer() {
+        return socketServer;
+    }
+
+    public MongoDatabaseHandler getDatabaseHandler() {
+        return databaseHandler;
+    }
+
+    public ServiceManagerImpl getServiceManager() {
+        return serviceManager;
+    }
+
+    public EventManagerImpl getEventManager() {
+        return eventManager;
+    }
+
+    public PacketHandler getPacketHandler() {
+        return packetHandler;
     }
 
 

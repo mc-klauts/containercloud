@@ -1,13 +1,10 @@
 package de.containercloud.api.service;
 
 import de.containercloud.api.registry.CloudService;
-import lombok.NonNull;
-
-import java.util.UUID;
 
 public interface ServiceManager extends CloudService {
 
-    Service withName(@NonNull String serviceName);
+    Service withName(String serviceName);
 
     Service withId(String serviceId);
 

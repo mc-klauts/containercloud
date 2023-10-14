@@ -2,11 +2,12 @@ package de.containercloud.protocol.http.services;
 
 import com.google.gson.Gson;
 import de.containercloud.database.MongoProvider;
+import de.containercloud.impl.service.ServiceImpl;
+import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.protocol.http.body.CreateServiceBody;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +26,17 @@ public class CreateServiceRequest implements Handler {
             return;
         }
 
-        val body = new Gson().fromJson(ctx.body(), CreateServiceBody.class);
+        CreateServiceBody body = new Gson().fromJson(ctx.body(), CreateServiceBody.class);
 
-        if (!MongoProvider.getINSTANCE().getTaskHandler().existTask(body.taskId())) {
+        if (!MongoProvider.getINSTANCE().getTaskHandler().existTask(body.taskId()).get()) {
             logger.warn("TaskId can't be found in request");
             ctx.res().sendError(404, "TaskId can't be found!");
             return;
         }
 
-        val task = MongoProvider.getINSTANCE().getTaskHandler().task(body.taskId());
+        TaskImpl task = MongoProvider.getINSTANCE().getTaskHandler().task(body.taskId()).get();
 
-        val service = CloudWrapper.getINSTANCE().getContainerWrapper().runService(task);
+        ServiceImpl service = CloudWrapper.getINSTANCE().getContainerWrapper().runService(task);
 
         ctx.json(service);
     }

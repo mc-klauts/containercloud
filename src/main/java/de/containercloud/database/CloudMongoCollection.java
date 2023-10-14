@@ -1,10 +1,8 @@
 package de.containercloud.database;
 
-import lombok.Getter;
 
 public record CloudMongoCollection(CollectionTypes type, String collectionName) {
 
-    @Getter
     public enum CollectionTypes {
         SERVICE("services"),
         TASK("tasks"),
@@ -16,6 +14,10 @@ public record CloudMongoCollection(CollectionTypes type, String collectionName) 
 
         CollectionTypes(String type) {
             this.type = type;
+        }
+
+        public String getType() {
+            return type;
         }
     }
 

@@ -1,13 +1,16 @@
 package de.containercloud.api.service.configuration;
 
 import de.containercloud.api.MinecraftVersion;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class DefaultServiceConfiguration implements ServiceConfiguration {
     private final PortPair runningPort;
     private final MinecraftVersion minecraftVersion;
     private final int maxServices;
+    public DefaultServiceConfiguration(PortPair runningPort, MinecraftVersion minecraftVersion, int maxServices) {
+        this.runningPort = runningPort;
+        this.minecraftVersion = minecraftVersion;
+        this.maxServices = maxServices;
+    }
 
     @Override
     public PortPair runningPort() {

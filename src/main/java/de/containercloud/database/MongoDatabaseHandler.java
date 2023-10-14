@@ -1,16 +1,17 @@
 package de.containercloud.database;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
-import com.mongodb.client.*;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import de.containercloud.env.EnvConfig;
-import de.containercloud.shutdown.ShutdownService;
-import lombok.val;
 import org.bson.Document;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
 public class MongoDatabaseHandler {
 
@@ -33,13 +34,13 @@ public class MongoDatabaseHandler {
 
     private void setupCollections() {
 
-        val collections = this.database.listCollectionNames();
+        Publisher<String> collections = this.database.listCollectionNames();
 
         for (CloudMongoCollection.CollectionTypes cloudCollection : CloudMongoCollection.CollectionTypes.values()) {
 
-            val collection = EnvConfig.getCollectionEnv(cloudCollection);
+            CloudMongoCollection collection = EnvConfig.getCollectionEnv(cloudCollection);
 
-            if (!checkCollection(collection, collections))
+            if (!checkCollection(collection, collections).getNow(false))
                 this.database.createCollection(collection.collectionName());
 
         }
@@ -47,27 +48,43 @@ public class MongoDatabaseHandler {
 
     }
 
-    private boolean checkCollection(CloudMongoCollection collection, MongoIterable<String> collections) {
+    private CompletableFuture<Boolean> checkCollection(CloudMongoCollection collection, Publisher<String> collections) {
 
-        boolean exist = false;
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        for (String mongoCollection : collections)
-            if (mongoCollection.equals(collection.collectionName())) {
-                exist = true;
-                break;
+        collections.subscribe(new Subscriber<>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+                s.request(CloudMongoCollection.CollectionTypes.values().length);
             }
 
+            @Override
+            public void onNext(String dbCollection) {
+                if (dbCollection.equals(collection.collectionName()))
+                    future.complete(true);
+            }
 
-        return exist;
+            @Override
+            public void onError(Throwable t) {
+                t.fillInStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        return future;
     }
 
     private ConnectionString setupConnectionString() {
 
-        val user = EnvConfig.getEnv("DATABASE.USER");
-        val password = EnvConfig.getEnv("DATABASE.PASSWORD");
-        val dataBase = EnvConfig.getEnv("DATABASE.DATABASE");
-        val port = EnvConfig.getEnv("DATABASE.PORT");
-        val host = EnvConfig.getEnv("DATABASE.HOST");
+        String user = EnvConfig.getEnv("DATABASE.USER");
+        String password = EnvConfig.getEnv("DATABASE.PASSWORD");
+        String dataBase = EnvConfig.getEnv("DATABASE.DATABASE");
+        String port = EnvConfig.getEnv("DATABASE.PORT");
+        String host = EnvConfig.getEnv("DATABASE.HOST");
 
         return new ConnectionString(
                 "mongodb://" +

@@ -1,6 +1,5 @@
 package de.containercloud.shutdown;
 
-import lombok.val;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ public class ShutdownService {
                 if (!CLOSE_LIST.containsKey(priority))
                     continue;
 
-                val consumers = CLOSE_LIST.get(priority);
+                List<Consumer<?>> consumers = CLOSE_LIST.get(priority);
 
                 consumers.forEach(consumer -> consumer.accept(null));
             }
@@ -31,7 +30,7 @@ public class ShutdownService {
         if (!CLOSE_LIST.containsKey(priority))
             CLOSE_LIST.put(priority, new ArrayList<>());
 
-        val consumers = CLOSE_LIST.get(priority);
+        List<Consumer<?>> consumers = CLOSE_LIST.get(priority);
         consumers.add(closeable);
         CLOSE_LIST.put(priority, consumers);
     }

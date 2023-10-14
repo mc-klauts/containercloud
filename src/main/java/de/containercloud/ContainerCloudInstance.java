@@ -13,7 +13,6 @@ import de.containercloud.json.JsonBodyHandler;
 import de.containercloud.registry.CloudRegistryImpl;
 import de.containercloud.shutdown.ShutdownService;
 import de.containercloud.wrapper.CloudWrapper;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,7 @@ public class ContainerCloudInstance {
 
         new MongoProvider(databaseHandler);
 
-        val registry = new CloudRegistryImpl();
+        CloudRegistryImpl registry = new CloudRegistryImpl();
         new CloudAPI(registry);
 
         CloudWrapper wrapper = new CloudWrapper(this.httpClient, this.dockerClientConfig, this.logger, databaseHandler, registry);

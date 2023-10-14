@@ -4,9 +4,7 @@ import de.containercloud.database.handler.MongoServiceHandler;
 import de.containercloud.database.handler.MongoTaskHandler;
 import de.containercloud.database.handler.MongoTemplateHandler;
 import de.containercloud.database.handler.MongoVerificationHandler;
-import lombok.Getter;
 
-@Getter
 public class MongoProvider {
 
     private static MongoProvider INSTANCE;
@@ -24,7 +22,22 @@ public class MongoProvider {
         this.verificationHandler = new MongoVerificationHandler(databaseHandler);
     }
 
-    @SuppressWarnings("LombokGetterMayBeUsed")
+    public MongoServiceHandler getServiceHandler() {
+        return serviceHandler;
+    }
+
+    public MongoTaskHandler getTaskHandler() {
+        return taskHandler;
+    }
+
+    public MongoTemplateHandler getTemplateHandler() {
+        return templateHandler;
+    }
+
+    public MongoVerificationHandler getVerificationHandler() {
+        return verificationHandler;
+    }
+
     public static MongoProvider getINSTANCE() {
         return INSTANCE;
     }

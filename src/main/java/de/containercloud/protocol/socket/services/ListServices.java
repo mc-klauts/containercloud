@@ -5,9 +5,9 @@ import de.containercloud.api.service.Service;
 import de.containercloud.protocol.TokenChecker;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.websocket.WsConfig;
-import lombok.SneakyThrows;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +41,16 @@ public class ListServices {
 
     }
 
-    @SneakyThrows
+
     public static void broadcastServiceUpdate(List<Service> services) {
 
-        for (Session session : SESSIONS)
-            session.getRemote().sendString(new Gson().toJson(services));
+        for (Session session : SESSIONS) {
+            try {
+                session.getRemote().sendString(new Gson().toJson(services));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 }

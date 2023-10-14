@@ -1,8 +1,7 @@
 package de.containercloud.api;
 
-import lombok.Getter;
+;
 
-@Getter
 public enum MinecraftPlatform {
 
     PAPER("PAPER"),
@@ -13,6 +12,10 @@ public enum MinecraftPlatform {
     MinecraftPlatform(String platformId) {
 
         this.platformId = platformId;
+    }
+
+    public String getPlatformId() {
+        return platformId;
     }
 
     @Override

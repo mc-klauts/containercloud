@@ -4,7 +4,6 @@ import de.containercloud.protocol.TokenChecker;
 import de.containercloud.wrapper.CloudWrapper;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 public class GetServiceRequest implements Handler {
@@ -18,7 +17,7 @@ public class GetServiceRequest implements Handler {
             return;
         }
 
-        val serviceId = ctx.header("serviceId");
+        String serviceId = ctx.header("serviceId");
 
         ctx.json(CloudWrapper.getINSTANCE().getServiceManager().withId(serviceId));
 

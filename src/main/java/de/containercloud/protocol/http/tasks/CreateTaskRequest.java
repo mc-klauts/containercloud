@@ -6,7 +6,6 @@ import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.protocol.TokenChecker;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateTaskRequest implements Handler {
@@ -20,9 +19,9 @@ public class CreateTaskRequest implements Handler {
             return;
         }
 
-        val task = new Gson().fromJson(ctx.body(), TaskImpl.class);
+        TaskImpl task = new Gson().fromJson(ctx.body(), TaskImpl.class);
 
-        val savedTask = MongoProvider.getINSTANCE().getTaskHandler().createTask(task);
+        boolean savedTask = MongoProvider.getINSTANCE().getTaskHandler().createTask(task);
 
         ctx.json(savedTask);
 

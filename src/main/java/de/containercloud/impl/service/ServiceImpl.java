@@ -5,17 +5,22 @@ import de.containercloud.api.service.Service;
 import de.containercloud.api.task.Task;
 import de.containercloud.database.MongoProvider;
 import de.containercloud.wrapper.CloudWrapper;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+import java.util.concurrent.ExecutionException;
+
 public class ServiceImpl implements Service {
-
     @JsonSerialize
     private final String serviceId;
     @JsonSerialize
     private final String taskId;
     @JsonSerialize
     private final String serviceName;
+
+    public ServiceImpl(String serviceId, String taskId, String serviceName) {
+        this.serviceId = serviceId;
+        this.taskId = taskId;
+        this.serviceName = serviceName;
+    }
 
     @Override
     public boolean start() {
@@ -34,7 +39,12 @@ public class ServiceImpl implements Service {
 
     @Override
     public Task task() {
-        return MongoProvider.getINSTANCE().getTaskHandler().task(taskId);
+        try {
+            return MongoProvider.getINSTANCE().getTaskHandler().task(taskId).get();
+        } catch (InterruptedException | ExecutionException exception) {
+            exception.fillInStackTrace();
+        }
+        return null;
     }
 
     @Override

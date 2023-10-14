@@ -1,6 +1,8 @@
 package de.containercloud.wrapper;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import de.containercloud.api.service.Service;
 import de.containercloud.api.task.Task;
@@ -10,13 +12,13 @@ import de.containercloud.impl.service.ServiceImpl;
 import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.protocol.socket.services.ListServices;
 import de.containercloud.shutdown.ShutdownService;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class CloudContainerWrapper {
 
@@ -31,16 +33,22 @@ public class CloudContainerWrapper {
         ShutdownService.addShutdown(1, o -> {
             runningContainers.keySet().forEach(s -> {
 
-                val taskId = runningContainers.get(s).task().taskId();
+                String taskId = runningContainers.get(s).task().taskId();
 
-                val task = MongoProvider.getINSTANCE().getTaskHandler().task(taskId);
+                TaskImpl task = null;
+                try {
+                    task = MongoProvider.getINSTANCE().getTaskHandler().task(taskId).get();
 
-                MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
+                    MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
 
-                ShutdownService.addShutdown(2, o1 -> {
-                    this.dockerClient.stopContainerCmd(s).exec();
-                    this.dockerClient.removeContainerCmd(s).exec();
-                });
+                    ShutdownService.addShutdown(2, o1 -> {
+                        this.dockerClient.stopContainerCmd(s).exec();
+                        this.dockerClient.removeContainerCmd(s).exec();
+                    });
+
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
 
             });
 
@@ -59,15 +67,15 @@ public class CloudContainerWrapper {
 
     public ServiceImpl runService(TaskImpl task) {
 
-        val serviceName = createServiceName(task);
+        String serviceName = createServiceName(task);
 
         // create container volume
-        val containerVolume = new Volume("/data");
+        Volume containerVolume = new Volume("/data");
 
         Bind bind = new Bind("/home/theccloud/services/" + serviceName, containerVolume);
 
         // TODO - specify custom docker image
-        val createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
+        CreateContainerCmd createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
 
                 .withName("cloud-" + serviceName)
 
@@ -90,10 +98,10 @@ public class CloudContainerWrapper {
 
         createContainer.withVolumes(containerVolume);
 
-        val response = createContainer.exec();
+        CreateContainerResponse response = createContainer.exec();
 
 
-        val dockerContainerId = response.getId();
+        String dockerContainerId = response.getId();
 
         this.dockerClient.copyArchiveToContainerCmd(dockerContainerId).withHostResource("/home/theccloud/template/" + task.template().name()).exec();
 
@@ -101,7 +109,7 @@ public class CloudContainerWrapper {
 
         this.dockerClient.startContainerCmd(dockerContainerId).exec();
 
-        val service = new ServiceImpl(dockerContainerId, task.taskId(), serviceName);
+        ServiceImpl service = new ServiceImpl(dockerContainerId, task.taskId(), serviceName);
 
         this.runningContainers.put(dockerContainerId, service);
 
