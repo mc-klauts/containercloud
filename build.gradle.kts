@@ -35,6 +35,9 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
+    implementation("org.jetbrains:annotations:24.0.0")
+
+    annotationProcessor("org.jetbrains:annotations:24.0.0")
 
     // Javalin
     implementation("io.javalin:javalin:5.6.2")

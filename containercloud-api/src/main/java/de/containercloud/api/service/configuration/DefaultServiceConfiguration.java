@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultServiceConfiguration implements ServiceConfiguration {
     private final PortPair runningPort;
     private final MinecraftVersion minecraftVersion;
+    private final int maxServices;
 
     @Override
     public PortPair runningPort() {
@@ -16,5 +17,10 @@ public class DefaultServiceConfiguration implements ServiceConfiguration {
     @Override
     public MinecraftVersion version() {
         return this.minecraftVersion;
+    }
+
+    @Override
+    public int maxServices() {
+        return maxServices;
     }
 }

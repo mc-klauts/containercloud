@@ -8,8 +8,7 @@ import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.service.ServiceConfigurationImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,9 +18,17 @@ public class TaskImpl implements Task {
     private final ServiceConfigurationImpl serviceConfiguration;
     private String template;
 
+    @Setter
+    private int runningServices = 0;
+
     @Override
     public String taskId() {
         return this.taskId;
+    }
+
+    @Override
+    public int runningServices() {
+        return runningServices;
     }
 
     @Override

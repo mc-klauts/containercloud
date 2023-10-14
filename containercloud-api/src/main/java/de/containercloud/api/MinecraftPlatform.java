@@ -6,10 +6,7 @@ import lombok.Getter;
 public enum MinecraftPlatform {
 
     PAPER("PAPER"),
-    SPIGOT("SPIGOT"),
-    FORGE("FORGE"),
-    SPONGE("SPONGE"),
-    FABRIC("FABRIC");
+    VELOCITY("VELOCITY");
 
     private final String platformId;
 

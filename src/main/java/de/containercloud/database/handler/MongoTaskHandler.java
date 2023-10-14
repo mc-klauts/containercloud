@@ -11,6 +11,7 @@ import de.containercloud.env.EnvConfig;
 import de.containercloud.impl.task.TaskImpl;
 import lombok.val;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MongoTaskHandler extends Handler {
         return document != null;
     }
 
-    public boolean createTask(TaskImpl task) {
+    public boolean createTask(@NotNull TaskImpl task) {
         val collection = this.collection();
 
         if (this.existTask(task.taskId()))
@@ -73,7 +74,7 @@ public class MongoTaskHandler extends Handler {
         return true;
     }
 
-    public boolean updateTask(TaskImpl task) {
+    public boolean updateTask(@NotNull TaskImpl task) {
 
         if (!this.existTask(task.taskId()))
             return false;

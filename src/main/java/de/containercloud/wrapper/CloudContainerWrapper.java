@@ -4,8 +4,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.*;
 import de.containercloud.api.service.Service;
 import de.containercloud.api.task.Task;
-import de.containercloud.database.MongoDatabaseHandler;
 import de.containercloud.database.MongoProvider;
+import de.containercloud.database.handler.MongoTaskHandler;
 import de.containercloud.impl.service.ServiceImpl;
 import de.containercloud.impl.task.TaskImpl;
 import de.containercloud.protocol.socket.services.ListServices;
@@ -21,12 +21,12 @@ import java.util.Map;
 public class CloudContainerWrapper {
 
     private final DockerClient dockerClient;
+    private final MongoTaskHandler taskHandler;
     private final Map<String, Service> runningContainers = new HashMap<>();
-    private final MongoDatabaseHandler databaseHandler;
 
-    public CloudContainerWrapper(DockerClient dockerClient, MongoDatabaseHandler databaseHandler) {
+    public CloudContainerWrapper(DockerClient dockerClient, MongoTaskHandler taskHandler) {
         this.dockerClient = dockerClient;
-        this.databaseHandler = databaseHandler;
+        this.taskHandler = taskHandler;
 
         ShutdownService.addShutdown(1, o -> {
             runningContainers.keySet().forEach(s -> {
@@ -64,7 +64,7 @@ public class CloudContainerWrapper {
         // create container volume
         val containerVolume = new Volume("/data");
 
-        Bind bind = new Bind("/home/theccloud/services/" + serviceName, containerVolume)
+        Bind bind = new Bind("/home/theccloud/services/" + serviceName, containerVolume);
 
         // TODO - specify custom docker image
         val createContainer = this.dockerClient.createContainerCmd("itzg/minecraft-server:latest")
@@ -82,29 +82,32 @@ public class CloudContainerWrapper {
                         .withBinds(bind))
 
                 .withEnv("TYPE=" + task.configuration().version().platform().getPlatformId(),
-                        "EULA=true");
+                        "EULA=true",
+                        "VALIDATE-TOKEN=123"); // TODO - change token
 
         // TODO - make mount path changeable
 
 
-        // TODO copy files from template
-
         createContainer.withVolumes(containerVolume);
 
-
-        val response = createContainer.withVolumes()
-                .exec();
+        val response = createContainer.exec();
 
 
-        val id = response.getId();
+        val dockerContainerId = response.getId();
+
+        this.dockerClient.copyArchiveToContainerCmd(dockerContainerId).withHostResource("/home/theccloud/template/" + task.template().name()).exec();
 
         MongoProvider.getINSTANCE().getTaskHandler().updateTask(task);
 
-        this.dockerClient.startContainerCmd(id).exec();
+        this.dockerClient.startContainerCmd(dockerContainerId).exec();
 
-        val service = new ServiceImpl(id, task.taskId(), serviceName);
+        val service = new ServiceImpl(dockerContainerId, task.taskId(), serviceName);
 
-        this.runningContainers.put(id, service);
+        this.runningContainers.put(dockerContainerId, service);
+
+        task.setRunningServices(task.getRunningServices() + 1);
+
+        this.taskHandler.updateTask(task);
 
         ListServices.broadcastServiceUpdate(this.runningContainers.values().stream().toList());
 

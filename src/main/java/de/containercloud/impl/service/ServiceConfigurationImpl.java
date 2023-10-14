@@ -11,6 +11,7 @@ public class ServiceConfigurationImpl implements ServiceConfiguration {
 
     private final PortPair port;
     private final MinecraftVersion minecraftVersion;
+    private final int maxServices;
 
     @Override
     public PortPair runningPort() {
@@ -20,6 +21,11 @@ public class ServiceConfigurationImpl implements ServiceConfiguration {
     @Override
     public MinecraftVersion version() {
         return this.minecraftVersion;
+    }
+
+    @Override
+    public int maxServices() {
+        return maxServices;
     }
 
     @Override

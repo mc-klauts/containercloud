@@ -7,14 +7,18 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import de.containercloud.api.event.EventManager;
 import de.containercloud.api.service.ServiceManager;
 import de.containercloud.database.MongoDatabaseHandler;
+import de.containercloud.database.MongoProvider;
 import de.containercloud.impl.event.EventManagerImpl;
 import de.containercloud.impl.service.ServiceManagerImpl;
 import de.containercloud.protocol.CloudSocketServer;
+import de.containercloud.protocol.packet.PacketHandler;
 import de.containercloud.registry.CloudRegistryImpl;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.io.IOException;
 
 @Getter
 public class CloudWrapper {
@@ -27,6 +31,7 @@ public class CloudWrapper {
     private final MongoDatabaseHandler databaseHandler;
     private final ServiceManagerImpl serviceManager;
     private final EventManagerImpl eventManager;
+    private final PacketHandler packetHandler;
 
     public CloudWrapper(DockerHttpClient httpClient, DockerClientConfig dockerClientConfig, @NotNull Logger logger, MongoDatabaseHandler databaseHandler, @NotNull CloudRegistryImpl registry) {
         this.databaseHandler = databaseHandler;
@@ -38,7 +43,7 @@ public class CloudWrapper {
         logger.info("Starting Cloud Wrapper...");
 
         // Start all sub wrapper
-        this.containerWrapper = new CloudContainerWrapper(this.dockerClient, this.databaseHandler);
+        this.containerWrapper = new CloudContainerWrapper(this.dockerClient, MongoProvider.getINSTANCE().getTaskHandler());
 
         logger.info("Starting Sockets...");
         this.socketServer = new CloudSocketServer();
@@ -53,6 +58,12 @@ public class CloudWrapper {
         this.eventManager = new EventManagerImpl();
 
         registry.addService(EventManager.class, eventManager);
+
+        try {
+            this.packetHandler = new PacketHandler(this.getEventManager(), MongoProvider.getINSTANCE().getVerificationHandler());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         logger.info("CloudWrapper start finished!");
 

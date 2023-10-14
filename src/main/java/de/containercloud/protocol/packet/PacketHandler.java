@@ -5,23 +5,34 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import de.containercloud.api.event.EventType;
 import de.containercloud.api.event.GsonData;
-import de.containercloud.api.packets.ErrorResponse;
 import de.containercloud.api.packets.Packet;
-import de.containercloud.api.packets.SuccessResponse;
+import de.containercloud.api.packets.PacketType;
+import de.containercloud.api.packets.response.ErrorResponse;
+import de.containercloud.api.packets.response.SuccessResponse;
+import de.containercloud.api.security.Verification;
+import de.containercloud.database.handler.MongoVerificationHandler;
 import de.containercloud.impl.event.EventManagerImpl;
 import lombok.val;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 ;
 
 public class PacketHandler {
     private final Server server;
     private final EventManagerImpl eventManager;
+    private final MongoVerificationHandler verificationHandler;
 
-    public PacketHandler(EventManagerImpl eventManager) throws IOException {
+    private final List<Verification> verifications = new ArrayList<>();
+
+    public PacketHandler(EventManagerImpl eventManager, MongoVerificationHandler verificationHandler) throws IOException {
         this.eventManager = eventManager;
+        this.verificationHandler = verificationHandler;
 
         this.server = new Server();
 
@@ -61,17 +72,38 @@ public class PacketHandler {
 
                             eventManager.callEvent(EventType.CUSTOM, GsonData.serialize(packet.getPacketData()));
 
-                            connection.sendUDP(new SuccessResponse("Packet has been successfully handled!"))
+                            connection.sendUDP(new SuccessResponse("Packet has been successfully handled!"));
 
                             return;
                         }
 
                         // verify docker container
 
+                        if (!(packet.getPacketData().get("AUTHORIZATION") instanceof Verification verification)) {
 
-                        // TODO - make the verify and response
+                            connection.sendUDP(new ErrorResponse("Verification failed!"));
 
+                            return;
+                        }
 
+                        if (verifications.contains(verification)) {
+
+                            val responsePacket = new Packet(PacketType.CUSTOM);
+
+                            responsePacket.addData("AUTHORIZATION", verification);
+                            responsePacket.addData("CODE", 2); // already verified
+
+                            return;
+                        }
+
+                        val responsePacket = new Packet(PacketType.CUSTOM);
+
+                        responsePacket.addData("AUTHORIZATION", verification);
+                        responsePacket.addData("CODE", 1); // verified
+
+                        verifications.add(verification);
+
+                        connection.sendTCP(responsePacket);
                     }
                 }
             }

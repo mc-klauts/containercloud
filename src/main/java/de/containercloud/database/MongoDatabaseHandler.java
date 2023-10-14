@@ -2,26 +2,28 @@ package de.containercloud.database;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerApi;
+import com.mongodb.ServerApiVersion;
 import com.mongodb.client.*;
 import de.containercloud.env.EnvConfig;
 import de.containercloud.shutdown.ShutdownService;
 import lombok.val;
 import org.bson.Document;
 
+import java.util.concurrent.TimeUnit;
+
 public class MongoDatabaseHandler {
 
     private final MongoDatabase database;
 
     public MongoDatabaseHandler() {
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(setupConnectionString())
-                .build();
 
-        try (MongoClient client = MongoClients.create(settings)) {
+
+        try (MongoClient client = MongoClients.create(setupConnectionString())) {
             this.database = client.getDatabase(EnvConfig.getEnv("DATABASE.DATABASE"));
 
             setupCollections();
-            ShutdownService.addShutdown(100, o -> client.close());
+            //ShutdownService.addShutdown(100, o -> client.close());
         }
     }
 

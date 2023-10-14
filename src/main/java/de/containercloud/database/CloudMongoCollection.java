@@ -8,7 +8,7 @@ public record CloudMongoCollection(CollectionTypes type, String collectionName) 
     public enum CollectionTypes {
         SERVICE("services"),
         TASK("tasks"),
-        VOLUME("volumes"),
+        VERIFICATION("verification"),
         TEMPLATE("templates"),
         DATA("cloud-data");
 
